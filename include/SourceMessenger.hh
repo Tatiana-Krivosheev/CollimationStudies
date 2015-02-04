@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 class Source;
 class G4UIcmdWithADoubleAndUnit;
@@ -13,11 +13,8 @@ class SourceMessenger: public G4UImessenger
     private: Source* _source;
 
     //commands
-    private: G4UIcmdWithADoubleAndUnit*  _momentum_cmd;       // mean E in MeV
-    private: G4UIcmdWithADoubleAndUnit*  _momentumSigma_cmd;  // sigma E in MeV
-
-    private: G4UIcmdWithADoubleAndUnit*  _radius_cmd;       // r in mm
-    private: G4UIcmdWithADoubleAndUnit*  _radiusSigma_cmd;  // rSigma in mm    
+    private: G4UIcmdWithADoubleAndUnit*  _radius_cmd;  // source r, in mm
+    private: G4UIcmdWithADoubleAndUnit*  _halfz_cmd;   // souce halfz, in mm    
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
