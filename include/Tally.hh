@@ -7,15 +7,12 @@
 #include "globals.hh"
 #include "G4UserRunAction.hh"
 
-class Phantom;
 class G4LogicalVolume;
 class G4Run;
 
 class Tally : public G4UserRunAction
 {
 #pragma region Data
-    private: Phantom*  _phantom;
-
     private: double*   _edep;
     private: double*   _eerr;
     private: int       _maxTally;

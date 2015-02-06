@@ -28,7 +28,7 @@ class Source : public G4VUserPrimaryGeneratorAction
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
-    public: Source(double radius, double full_z);
+    public: Source(double radius, double half_z);
     public: ~Source();
 #pragma endregion
 

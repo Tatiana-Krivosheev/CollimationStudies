@@ -6,8 +6,12 @@ class G4Event;
 
 class EventAction : public G4UserEventAction
 {
+#pragma region Data
+    private: double _end;
+#pragma endregion
+    
 #pragma region Ctor/Dtor/ops
-    public: EventAction();
+    public: EventAction(double end);
     public: virtual ~EventAction();
 #pragma endregion
 
@@ -15,4 +19,9 @@ class EventAction : public G4UserEventAction
     public: virtual void BeginOfEventAction(const G4Event*);
     public: virtual void EndOfEventAction(const G4Event*);
 #pragma endregion
+
+    public: double end() const
+    {
+        return _end;
+    }
 };
