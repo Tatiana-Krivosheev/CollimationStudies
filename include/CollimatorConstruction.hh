@@ -13,8 +13,7 @@ class G4UserLimits;
 
 class CollimatorMessenger;
 
-/// Detector construction class to define materials, geometry
-/// and global uniform magnetic field.
+/// Detector construction class to define materials & geometry
 
 class CollimatorConstruction : public G4VUserDetectorConstruction
 {
@@ -35,16 +34,23 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: G4VPhysicalVolume* DefineVolumes();
   
 #pragma region Data
-    private: G4LogicalVolume*   fLogicTarget;     // pointer to the logical Target
+    private: G4LogicalVolume*   _logicTarget;    // pointer to the logical Target
 
     private: G4Material*        _Nickel;         // pointer to the source material
     private: G4Material*        _Tungsten;       // pointer to the collimator material
     private: G4Material*        _Iron;           // pointer to the shielding material
+    private: G4Material*        _Air;            // pointer to the air
 
-    private: G4UserLimits*      _stepLimit;            // pointer to user step limits
+    private: G4UserLimits*      _stepLimit;      // pointer to user step limits
 
     private: CollimatorMessenger*  _messenger;   // messenger
 
-    private: bool  fCheckOverlaps; // option to activate checking of volumes overlaps
+    private: double                _src_radius;
+    private: double                _src_halfz;
+
+    private: double                _col_radius;
+    private: double                _col_halfz;
+  
+    private: bool  _checkOverlaps;               // option to activate checking of volumes overlaps
 #pragma endregion
 };

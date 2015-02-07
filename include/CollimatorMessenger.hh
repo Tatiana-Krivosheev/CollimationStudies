@@ -10,12 +10,12 @@ class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithADoubleAndUnit;
 
-/// Messenger class that defines commands for B2aDetectorConstruction.
+/// Messenger class that defines commands for CollimatorConstruction.
 ///
 /// It implements commands:
-/// - /B2/det/setTargetMaterial name
-/// - /B2/det/setChamberMaterial name
-/// - /B2/det/stepMax value unit
+/// - /GP/det/setTargetMaterial name
+/// - /GP/det/setChamberMaterial name
+/// - /GP/det/stepMax value unit
 
 class CollimatorMessenger: public G4UImessenger
 {
@@ -26,11 +26,11 @@ class CollimatorMessenger: public G4UImessenger
     
     private: CollimatorConstruction*  _collimator;
 
-    G4UIdirectory*           fB2Directory;
-    G4UIdirectory*           fDetDirectory;
+    private: G4UIdirectory*           _gpDirectory;
+    private: G4UIdirectory*           _detDirectory;
 
-    G4UIcmdWithAString*      fTargMatCmd;
-    G4UIcmdWithAString*      fChamMatCmd;
+    private: G4UIcmdWithAString*      fTargMatCmd;
+    private: G4UIcmdWithAString*      fChamMatCmd;
 
-    G4UIcmdWithADoubleAndUnit* fStepMaxCmd;
+    private: G4UIcmdWithADoubleAndUnit* fStepMaxCmd;
 };
