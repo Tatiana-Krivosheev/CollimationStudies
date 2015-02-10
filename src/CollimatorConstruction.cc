@@ -41,7 +41,6 @@ ColimatorConstruction::CollimatorConstruction(double src_radius,
  
 ColimatorConstruction::~ColimatorConstruction()
 {
-    delete [] fLogicChamber; 
     delete _stepLimit;
     delete _messenger;
 }
@@ -116,9 +115,6 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       0,               // copy number
                       _checkOverlaps); // checking overlaps 
 
-    std::cout << "Source is " << 2*targetLength/cm << " cm of "
-                              << fTargetMaterial->GetName() << G4endl;
-
     // Source enclosure 
     auto srcEnclosure = new G4Tubs("enclosure", _src_radius, _enc_radius, _src_halfz, 0.0*deg, 360.0*deg);
     G4LogicalVolume* encLV = new G4LogicalVolume(srcEnclosure, _Iron, "Enclosure", 0, 0, 0);
@@ -132,58 +128,74 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       _checkOverlaps);             // checking overlaps
 
     // source backside shielding
-    auto srcBack = new G4Tubs("enclosure", 0.0, _enc_radius, 5.0*cm, 0.0*deg, 360.0*deg);
-    G4LogicalVolume* encLV = new G4LogicalVolume(srcEnclosure, _Iron, "Enclosure", 0, 0, 0);
+    auto srcBack = new G4Tubs("enclosure", 0.0, _enc_radius, _back_halfz, 0.0*deg, 360.0*deg);
+    G4LogicalVolume* backLV = new G4LogicalVolume(srcBack, _Iron, "Back", 0, 0, 0);
     new G4PVPlacement(0,                           // no rotation
-                      G4TheeVector(0.0, 0.0, 0.0), // at (0, 0, 0)
-                      encLV,                       // its logical volume
-                      "Enclosure",                 // its name
+                      G4TheeVector(0.0, 0.0, -0.5*_src_halfz - 0.5*_back_halfz), // shifted back
+                      backLV,                      // its logical volume
+                      "Back",                      // its name
                       worldLV,                     // its mother volume
                       false,                       // no boolean operations
                       0,                           // copy number
                       _checkOverlaps);             // checking overlaps
 
-  // Visualization attributes
-  G4VisAttributes* boxVisAtt     = new G4VisAttributes(G4Colour(1.0,1.0,1.0));
-  G4VisAttributes* chamberVisAtt = new G4VisAttributes(G4Colour(1.0,1.0,0.0));
+    // tungsten collimator
+    auto srcBack = new G4Tubs("collimator", 0.0, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
+    G4LogicalVolume* collLV = new G4LogicalVolume(srcBack, _Tungsten, "Collimator", 0, 0, 0);
+    new G4PVPlacement(0,                           // no rotation
+                      G4TheeVector(0.0, 0.0,  + 0.5*_src_halfz + 0.5*_coll_halfz), // shifted forward
+                      collLV,                      // its logical volume
+                      "Back",                      // its name
+                      worldLV,                     // its mother volume
+                      false,                       // no boolean operations
+                      0,                           // copy number
+                      _checkOverlaps);             // checking overlaps
+    
+    // air cone in collimator
+    auto srcBack = new G4Cone("chole", 0.0, _src_radius, _cout_radius, coll_halfz, 0.0*deg, 360.0*deg);
+    G4LogicalVolume* choleLV = new G4LogicalVolume(srcBack, _Air, "Chole", 0, 0, 0);
+    new G4PVPlacement(0,                           // no rotation
+                      G4TheeVector(0.0, 0.0, 0.0), // not shifted
+                      choleLV,                     // its logical volume
+                      "Back",                      // its name
+                      collLV,                      // its mother volume, which is collimator tube
+                      false,                       // no boolean operations
+                      0,                           // copy number
+                      _checkOverlaps);             // checking overlaps
 
-  worldLV      ->SetVisAttributes(boxVisAtt);
-  fLogicTarget ->SetVisAttributes(boxVisAtt);
-  trackerLV    ->SetVisAttributes(boxVisAtt);
+    // Visualization attributes
+    G4VisAttributes* boxVisAtt     = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0));
+    G4VisAttributes* chamberVisAtt = new G4VisAttributes(G4Colour(1.0, 1.0, 0.0));
 
-  // Example of User Limits
-  //
-  // Below is an example of how to set tracking constraints in a given
-  // logical volume
-  //
-  // Sets a max step length in the tracker region, with G4StepLimiter
+    worldLV      ->SetVisAttributes(boxVisAtt);
+    fLogicTarget ->SetVisAttributes(boxVisAtt);
+    trackerLV    ->SetVisAttributes(boxVisAtt);
 
-  double maxStep = 0.5*chamberWidth;
-  _stepLimit     = new G4UserLimits(maxStep);
-  trackerLV->SetUserLimits(fStepLimit);
+    // Example of User Limits
+    //
+    // Below is an example of how to set tracking constraints in a given
+    // logical volume
+    //
+    // Sets a max step length in the tracker region, with G4StepLimiter
+
+    double maxStep = 0.5*chamberWidth;
+    _stepLimit     = new G4UserLimits(maxStep);
+    trackerLV->SetUserLimits(fStepLimit);
  
-  /// Set additional contraints on the track, with G4UserSpecialCuts
-  ///
-  /// G4double maxLength = 2*trackerLength, maxTime = 0.1*ns, minEkin = 10*MeV;
-  /// trackerLV->SetUserLimits(new G4UserLimits(maxStep,
-  ///                                           maxLength,
-  ///                                           maxTime,
-  ///                                           minEkin));
+    // Always return the physical world
 
-  // Always return the physical world
-
-  return worldPV;
+    return worldPV;
 }
 
 void CollimatorConstruction::SetTargetMaterial(G4String materialName)
 {
-  G4NistManager* nistManager = G4NistManager::Instance();
+    G4NistManager* nistManager = G4NistManager::Instance();
 
-  G4Material* pttoMaterial = 
-              nistManager->FindOrBuildMaterial(materialName);
+    G4Material* pttoMaterial = nistManager->FindOrBuildMaterial(materialName);
 
-  if (fTargetMaterial != pttoMaterial) {
-     if ( pttoMaterial ) {
+    if (fTargetMaterial != pttoMaterial)
+    {
+      if ( pttoMaterial ) {
         fTargetMaterial = pttoMaterial;
         if (fLogicTarget) fLogicTarget->SetMaterial(fTargetMaterial);
         G4cout 
@@ -230,8 +242,3 @@ void CollimatorConstruction::SetMaxStep(G4double maxStep)
     if (_stepLimit != nullptr && maxStep > 0.0)
         _stepLimit->SetMaxAllowedStep(maxStep);
 }
-
-void CollimatorConstruction::SetCheckOverlaps(bool checkOverlaps)
-{
-    _checkOverlaps = checkOverlaps;
-}  

@@ -27,8 +27,6 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     public: void SetTargetMaterial(G4String );
     public: void SetChamberMaterial(G4String );
     public: void SetMaxStep ( double );
-    public: void SetCheckOverlaps( bool );
-
     
     private: void DefineMaterials();
     private: G4VPhysicalVolume* DefineVolumes();
@@ -48,9 +46,47 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: double                _src_radius;
     private: double                _src_halfz;
 
-    private: double                _col_radius;
-    private: double                _col_halfz;
+    private: double                _enc_radius;
+
+    private: double                _back_halfz;
+
+    private: double                _coll_radius;
+    private: double                _coll_halfz;
+
+    private: double                _cout_radius;
   
-    private: bool  _checkOverlaps;               // option to activate checking of volumes overlaps
+    private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
+#pragma endregion
+  
+#pragma region Observers
+    public: double src_radius() const
+    {
+        return _src_radius;
+    }
+
+    public: double src_halfz() const
+    {
+        return _src_halfz;
+    }
+  
+    public: double back_halfz() const
+    {
+        return _back_halfz;
+    }
+
+    public: double coll_radius() const
+    {
+        return _coll_radius;
+    }
+
+    public: double coll_halfz() const
+    {
+        return _coll_halfz;
+    }
+  
+    public: void SetCheckOverlaps(bool checkOverlaps)
+    {
+        _checkOverlaps = checkOverlaps;
+    }
 #pragma endregion
 };
