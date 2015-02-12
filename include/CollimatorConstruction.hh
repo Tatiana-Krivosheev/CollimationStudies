@@ -8,6 +8,7 @@
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
+
 class G4Material;
 class G4UserLimits;
 
@@ -21,13 +22,8 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     public: virtual ~CollimatorConstruction();
 
     public: virtual G4VPhysicalVolume* Construct() override;
-    public: virtual void ConstructSDandField() override;
 
     // Set methods
-    public: void SetTargetMaterial(G4String );
-    public: void SetChamberMaterial(G4String );
-    public: void SetMaxStep ( double );
-    
     private: void DefineMaterials();
     private: G4VPhysicalVolume* DefineVolumes();
   
@@ -39,16 +35,14 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: G4Material*        _Iron;           // pointer to the shielding material
     private: G4Material*        _Air;            // pointer to the air
 
-    private: G4UserLimits*      _stepLimit;      // pointer to user step limits
-
     private: CollimatorMessenger*  _messenger;   // messenger
 
-    private: double                _src_radius;
-    private: double                _src_halfz;
+    private: double                _src_radius;  // source radius
+    private: double                _src_halfz;   // source half Z
 
-    private: double                _enc_radius;
+    private: double                _enc_radius;  // enclosure radius
 
-    private: double                _back_halfz;
+    private: double                _back_halfz;  // back shielding length
 
     private: double                _coll_radius;
     private: double                _coll_halfz;
@@ -69,6 +63,11 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
         return _src_halfz;
     }
   
+    public: double enc_radius() const
+    {
+        return _enc_radius;
+    }
+    
     public: double back_halfz() const
     {
         return _back_halfz;
@@ -84,9 +83,54 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
         return _coll_halfz;
     }
   
-    public: void SetCheckOverlaps(bool checkOverlaps)
+    public: double cout_radius() const
     {
-        _checkOverlaps = checkOverlaps;
+        return _cout_radius;
+    }
+
+    public: bool checkOverlaps() const
+    {
+        return _checkOverlaps;
+    }
+
+    public: double set_src_radius(double v)
+    {
+        _src_radius = v;
+    }
+
+    public: double set_src_halfz(double v)
+    {
+        _src_halfz = v;
+    }
+  
+    public: double set_enc_radius(double v)
+    {
+        _enc_radius = v;
+    }
+    
+    public: double set_back_halfz(double v)
+    {
+        _back_halfz = v;
+    }
+
+    public: double set_coll_radius(double v)
+    {
+        _coll_radius = v;
+    }
+
+    public: double set_coll_halfz(double v)
+    {
+        _coll_halfz = v;
+    }
+  
+    public: double set_cout_radius(double v)
+    {
+        _cout_radius;
+    }
+
+    public: void set_checkOverlaps(bool v)
+    {
+        _checkOverlaps = v;
     }
 #pragma endregion
 };

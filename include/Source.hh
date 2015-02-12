@@ -1,15 +1,12 @@
 #pragma once
 
-#include <cassert>
-
-#include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
 
 #include "troika.hh"
 
 class G4ParticleGun;
 class G4Event;
-class SourceMessenger;
 
 class Source : public G4VUserPrimaryGeneratorAction
 {
@@ -21,14 +18,13 @@ class Source : public G4VUserPrimaryGeneratorAction
   
 #pragma region Data
     private: G4ParticleGun*             _particleGun;
-    private: SourceMessenger*           _srcMessenger;
 
     private: double _radius;
-    private: double _half_z;
+    private: double _halfz;
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
-    public: Source(double radius, double half_z);
+    public: Source(double radius, double halfz);
     public: ~Source();
 #pragma endregion
 
@@ -42,9 +38,9 @@ class Source : public G4VUserPrimaryGeneratorAction
         _radius = val;
     }
 
-    public: void set_fullz(double val)
+    public: void set_halfz(double v)
     {
-        _half_z = 0.5*val;
+        _half_z = v;
     }
 #pragma endregion
 
@@ -54,9 +50,9 @@ class Source : public G4VUserPrimaryGeneratorAction
         return _radius;
     }
 
-    public: double half_z() const
+    public: double halfz() const
     {
-        return _half_z;
+        return _halfz;
     }
 #pragma endregion
 };

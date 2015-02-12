@@ -29,8 +29,11 @@ class CollimatorMessenger: public G4UImessenger
     private: G4UIdirectory*           _gpDirectory;
     private: G4UIdirectory*           _detDirectory;
 
-    private: G4UIcmdWithAString*      fTargMatCmd;
-    private: G4UIcmdWithAString*      fChamMatCmd;
-
-    private: G4UIcmdWithADoubleAndUnit* fStepMaxCmd;
+    private: G4UIcmdWithADoubleAndUnit* _src_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _src_halfzCmd;
+    private: G4UIcmdWithADoubleAndUnit* _enc_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _back_halfzCmd;
+    private: G4UIcmdWithADoubleAndUnit* _coll_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _coll_halfzCmd;
+    private: G4UIcmdWithADoubleAndUnit* _cout_radiusCmd;
 };

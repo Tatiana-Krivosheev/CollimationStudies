@@ -1,7 +1,6 @@
 #include <cmath>
 
 #include "Source.hh"
-#include "SourceMessenger.hh"
 
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
@@ -12,18 +11,15 @@
 #include "Randomize.hh"
 
 // here you set global source parameters, called once per run
-Source::Source(double radius, double full_z):
+Source::Source(double radius, double halfz):
     _particleGun(nullptr),
     _srcMessenger(nullptr),
-    _radius(the_radius),
-    _radiusSigma(the_radiusSigma)
+    _radius(radius),
+    _halfz(halfz)
 {
     int nof_particles = 1;
 
     _particleGun = new G4ParticleGun(nof_particles);
-
-    //create a messenger for this class
-    _srcMessenger = new SourceMessenger(this);
 
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
     G4String particleName = "gamma";
@@ -36,7 +32,6 @@ Source::Source(double radius, double full_z):
 Source::~Source()
 {
     delete _particleGun;
-    delete _srcMessenger;
 }
 
 troika Source::sample_direction()
@@ -51,16 +46,13 @@ troika Source::sample_direction()
 
 double Source::sample_energy()
 {
-    if (G4UniformRand() < P_lo)
-        return E_lo;
-
-    return E_hi;
+    return (G4UniformRand() < P_lo) ? E_lo : E_hi;
 }
 
 // source particle parameters, called per each source event
 void Source::GeneratePrimaries(G4Event* anEvent)
 {
-    double z = _half_z * ( 2.0*G4UniformRand() - 1.0 );
+    double z = _halfz * ( 2.0*G4UniformRand() - 1.0 );
     double r = _radius * sqrt(G4UniformRand());
     double phi = 2.0 * M_PI * G4UniformRand();
   
