@@ -93,39 +93,39 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
         return _checkOverlaps;
     }
 
-    public: double set_src_radius(double v)
+    public: void set_src_radius(double v)
     {
         _src_radius = v;
     }
 
-    public: double set_src_halfz(double v)
+    public: void set_src_halfz(double v)
     {
         _src_halfz = v;
     }
   
-    public: double set_enc_radius(double v)
+    public: void set_enc_radius(double v)
     {
         _enc_radius = v;
     }
     
-    public: double set_back_halfz(double v)
+    public: void set_back_halfz(double v)
     {
         _back_halfz = v;
     }
 
-    public: double set_coll_radius(double v)
+    public: void set_coll_radius(double v)
     {
         _coll_radius = v;
     }
 
-    public: double set_coll_halfz(double v)
+    public: void set_coll_halfz(double v)
     {
         _coll_halfz = v;
     }
   
-    public: double set_cout_radius(double v)
+    public: void set_cout_radius(double v)
     {
-        _cout_radius;
+        _cout_radius = v;
     }
 
     public: void set_checkOverlaps(bool v)

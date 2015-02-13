@@ -3,7 +3,8 @@
 #include "globals.hh"
 #include "G4UImessenger.hh"
 
-class PhysicsList;
+class CollPhysicsList;
+
 class G4UIdirectory;
 class G4UIcmdWithoutParameter;
 class G4UIcmdWithADouble;
@@ -12,10 +13,10 @@ class G4UIcmdWithABool;
 class G4UIcmdWithAString;
 class G4UIcmdWithAInt;
 
-class CollPhysicsMessenger: public G4UImessenger
+class CollPhysicsListMessenger: public G4UImessenger
 {
 #pragma region Data
-    private: PhysicsList*        _physicsList;   
+    private: CollPhysicsList*    _physicsList;   
     private: G4UIdirectory*      _listDir;
     private: G4UIcmdWithAString* _physicsListCmd;
 
@@ -26,8 +27,8 @@ class CollPhysicsMessenger: public G4UImessenger
     private: G4UIcmdWithADoubleAndUnit* _allCutCmd;    
 #pragma endregion
 
-    public: PhysicaMessenger(Physica* physList);
-    public: ~PhysicaMessenger();
+    public: CollPhysicsListMessenger(CollPhysicsList* physList);
+    public: ~CollPhysicsListMessenger();
   
     public: void SetNewValue(G4UIcommand*, G4String);
 };

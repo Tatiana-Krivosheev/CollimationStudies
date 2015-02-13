@@ -1,5 +1,6 @@
-#include "PhysicaMessenger.hh"
-#include "Physica.hh"
+#include "CollPhysicsListMessenger.hh"
+#include "CollPhysicsList.hh"
+
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcmdWithADouble.hh"
@@ -8,7 +9,7 @@
 #include "G4UIcmdWithAString.hh"
 #include "G4SystemOfUnits.hh"
 
-CollPhysicsListMessenger::CollPhysicsListMessenger(Physica* physList):
+CollPhysicsListMessenger::CollPhysicsListMessenger(CollPhysicsList* physList):
     _physicsList(physList)
 {  
     _listDir = new G4UIdirectory("/GP/physics");

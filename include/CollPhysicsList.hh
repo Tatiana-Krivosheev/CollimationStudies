@@ -2,8 +2,9 @@
 
 #include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "G4SystemOfUnits.hh"
 
-class CollPhysicsMessenger;
+class CollPhysicsListMessenger;
 class G4VPhysicsConstructor;
 
 class CollPhysicsList: public G4VModularPhysicsList
@@ -19,12 +20,12 @@ class CollPhysicsList: public G4VModularPhysicsList
     private: G4VPhysicsConstructor*  _decayPhysicsList;
     private: G4VPhysicsConstructor*  _emExtraPhysicsList;
 
-    private: PhysicaMessenger*       _messenger;
+    private: CollPhysicsListMessenger*       _messenger;
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
-    public: CollPhysicsList(double cuts);
-    public: virtual ~PhysicsList();
+    public: CollPhysicsList(double cuts = 0.2*mm);
+    public: virtual ~CollPhysicsList();
 #pragma endregion
 
 #pragma region Overrides

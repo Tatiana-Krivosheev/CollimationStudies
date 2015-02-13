@@ -8,14 +8,14 @@
 CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     G4UImessenger(),
     _collimator(col),
+    _stepMaxCmdx{nullptr},
     _src_radiusCmd(nullptr),
     _src_halfzCmd(nullptr),
     _enc_radiusCmd(nullptr),
     _back_halfzCmd(nullptr),
     _coll_radiusCmd(nullptr),
     _coll_halfzCmd(nullptr),
-    _cout_radiusCmd(nullptr),
-    _stepMaxCmd(nullptr)
+    _cout_radiusCmd(nullptr)
 {
     _gpDirectory = new G4UIdirectory("/GP/");
     _gpDirectory->SetGuidance("Place where all GP commands are living.");
@@ -72,18 +72,20 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _cout_radiusCmd->SetRange("cout_radius>0.0");
     _cout_radiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);  
 
+    /*
     _stepMaxCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/stepMax",this);
     _stepMaxCmd->SetGuidance("Define a step max");
     _stepMaxCmd->SetParameterName("stepMax",false);
     _stepMaxCmd->SetUnitCategory("Length");
     _stepMaxCmd->SetRange("stepMax>0.0");
     _stepMaxCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    */
 }
 
 CollimatorMessenger::~CollimatorMessenger()
 {
-    delete _stepMaxCmd;
-
+    delete _stepMaxCmdx;
+    
     delete _src_radiusCmd;
     delete _src_halfzCmd;
     delete _enc_radiusCmd;

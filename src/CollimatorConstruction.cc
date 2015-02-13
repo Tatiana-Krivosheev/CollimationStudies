@@ -2,11 +2,13 @@
 
 #include <iostream>
 
+#include "globals.hh"
 #include "CollimatorConstruction.hh"
 #include "CollimatorMessenger.hh"
 
 #include "G4Material.hh"
 #include "G4NistManager.hh"
+#include "G4ThreeVector.hh"
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
@@ -27,8 +29,7 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
-ColimatorConstruction::CollimatorConstruction(double src_radius,
-					                          double src_halfz):
+CollimatorConstruction::CollimatorConstruction():
     G4VUserDetectorConstruction(),
     _Nickel(nullptr),
     _Tungsten(nullptr),
@@ -39,12 +40,12 @@ ColimatorConstruction::CollimatorConstruction(double src_radius,
     _messenger = new CollimatorMessenger(this);
 }
  
-ColimatorConstruction::~ColimatorConstruction()
+CollimatorConstruction::~CollimatorConstruction()
 {
     delete _messenger;
 }
 
-G4VPhysicalVolume* ColimatorConstruction::Construct()
+G4VPhysicalVolume* CollimatorConstruction::Construct()
 {
     DefineMaterials();
 
@@ -101,12 +102,11 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
 
     // Source
     auto sourceTube = new G4Tubs("source", 0.0, _src_radius, _src_halfz, 0.0*deg, 360.0*deg);
-  
-    _source  = new G4LogicalVolume(sourceTube, _Nickel, "source", 0, 0, 0);
+    G4LogicalVolume* sourceLV = new G4LogicalVolume(sourceTube, _Nickel, "source", 0, 0, 0);
     
     new G4PVPlacement(0,               // no rotation
 		              G4ThreeVector(), // at (0,0,0)
-		              _source,         // its logical volume
+		              sourceLV,        // its logical volume
                       "source",        // its name
                       worldLV,         // its mother volume
                       false,           // no boolean operations
@@ -118,7 +118,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
     auto srcEnclosure = new G4Tubs("enclosure", _src_radius, _enc_radius, _src_halfz, 0.0*deg, 360.0*deg);
     G4LogicalVolume* encLV = new G4LogicalVolume(srcEnclosure, _Iron, "Enclosure", 0, 0, 0);
     new G4PVPlacement(0,                           // no rotation
-                      G4TheeVector(0.0, 0.0, 0.0), // at (0, 0, 0)
+                      G4ThreeVector(0.0, 0.0, 0.0), // at (0, 0, 0)
                       encLV,                       // its logical volume
                       "Enclosure",                 // its name
                       worldLV,                     // its mother volume
@@ -130,7 +130,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
     auto srcBack = new G4Tubs("enclosure", 0.0, _enc_radius, _back_halfz, 0.0*deg, 360.0*deg);
     G4LogicalVolume* backLV = new G4LogicalVolume(srcBack, _Iron, "Back", 0, 0, 0);
     new G4PVPlacement(0,                           // no rotation
-                      G4TheeVector(0.0, 0.0, -_src_halfz - _back_halfz), // shifted back
+                      G4ThreeVector(0.0, 0.0, -_src_halfz - _back_halfz), // shifted back
                       backLV,                      // its logical volume
                       "Back",                      // its name
                       worldLV,                     // its mother volume
@@ -142,7 +142,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
     auto collW = new G4Tubs("collimator", 0.0, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
     G4LogicalVolume* collLV = new G4LogicalVolume(collW, _Tungsten, "Collimator", 0, 0, 0);
     new G4PVPlacement(0,                           // no rotation
-                      G4TheeVector(0.0, 0.0,  +_src_halfz + _coll_halfz), // shifted forward
+                      G4ThreeVector(0.0, 0.0,  +_src_halfz + _coll_halfz), // shifted forward
                       collLV,                      // its logical volume
                       "Back",                      // its name
                       worldLV,                     // its mother volume
@@ -151,10 +151,10 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       _checkOverlaps);             // checking overlaps
     
     // air cone in collimator
-    auto collOpen = new G4Cons("hole", 0.0, _src_radius, 0.0, _cout_radius, coll_halfz, 0.0*deg, 360.0*deg);
+    auto collOpen = new G4Cons("hole", 0.0, _src_radius, 0.0, _cout_radius, _coll_halfz, 0.0*deg, 360.0*deg);
     G4LogicalVolume* choleLV = new G4LogicalVolume(collOpen, _Air, "hole", 0, 0, 0);
     new G4PVPlacement(0,                           // no rotation
-                      G4TheeVector(0.0, 0.0, 0.0), // not shifted
+                      G4ThreeVector(0.0, 0.0, 0.0), // not shifted
                       choleLV,                     // its logical volume
                       "Back",                      // its name
                       collLV,                      // its mother volume, which is collimator tube

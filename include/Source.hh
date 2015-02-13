@@ -2,6 +2,7 @@
 
 #include "globals.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "G4SystemOfUnits.hh"
 
 #include "troika.hh"
 
@@ -10,11 +11,11 @@ class G4Event;
 
 class Source : public G4VUserPrimaryGeneratorAction
 {
-    public: constexpr double E_lo = 1.17*MeV;
-    public: constexpr double E_hi = 1.33*MeV;
+    public: constexpr static double E_lo = 1.17*MeV;
+    public: constexpr static double E_hi = 1.33*MeV;
  
-    public: constexpr double P_lo = 0.5;
-    public: constexpr double P_hi = 0.5;
+    public: constexpr static double P_lo = 0.5;
+    public: constexpr static double P_hi = 0.5;
   
 #pragma region Data
     private: G4ParticleGun*             _particleGun;
@@ -29,7 +30,8 @@ class Source : public G4VUserPrimaryGeneratorAction
 #pragma endregion
 
 #pragma region Mutators
-    protected: troika sample_direction(double x0, double y0, double z0) const;
+    public: static troika sample_direction();
+    public: static double sample_energy();
 
     public: void GeneratePrimaries(G4Event* anEvent);
 
@@ -40,7 +42,7 @@ class Source : public G4VUserPrimaryGeneratorAction
 
     public: void set_halfz(double v)
     {
-        _half_z = v;
+        _halfz = v;
     }
 #pragma endregion
 

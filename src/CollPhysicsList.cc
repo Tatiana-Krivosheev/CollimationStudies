@@ -9,9 +9,8 @@
 #include "G4ParticleTable.hh"
 
 #include "G4PhysListFactory.hh"
-#include "GammaKnifePhysicsList.hh"
-#include "GammaKnifePhysicsListMessenger.hh"
-#include "GammaKnifeParticles.hh"
+#include "CollPhysicsList.hh"
+#include "CollPhysicsListMessenger.hh"
 #include "G4SystemOfUnits.hh"
 
 // Physic lists (contained inside the Geant4 source code, in the 'physicslists folder')

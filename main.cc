@@ -1,8 +1,8 @@
 #include "G4SystemOfUnits.hh"
 
-#include "CollimatorConstruction.h"
-#include "Physica.hh"
-#include "ActionInitialization.hh"
+#include "CollimatorConstruction.hh"
+#include "CollPhysicsList.hh"
+#include "CollActionInitialization.hh"
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -15,7 +15,7 @@
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 
-#include "Randomize.h"
+#include "Randomize.hh"
 
 int main(int argc, char* argv[])
 {
@@ -41,10 +41,10 @@ int main(int argc, char* argv[])
     runManager->SetUserInitialization(new CollimatorConstruction);
 
     // Physics list
-    runManager->SetUserInitialization(new Physica);
+    runManager->SetUserInitialization(new CollPhysicsList);
     
     // User action initialization
-    runManager->SetUserInitialization(new ActionInitialization());
+    runManager->SetUserInitialization(new CollActionInitialization());
   
     // Initialize visualization
     //

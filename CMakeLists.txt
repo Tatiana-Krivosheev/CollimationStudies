@@ -46,8 +46,6 @@ target_link_libraries(col ${Geant4_LIBRARIES})
 #
 set(ALL_SCRIPTS
   batch.mac
-  phantom.hed
-  spectr.dat
   init.mac
   init_vis.mac
   vis.mac

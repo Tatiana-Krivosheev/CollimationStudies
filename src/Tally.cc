@@ -8,7 +8,6 @@
 #include "G4SystemOfUnits.hh"
 
 #include "Tally.hh"
-#include "Phantom.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
@@ -23,7 +22,7 @@ static inline double squared(double x)
     return x*x;
 }
 
-Tally::Tally():
+Tally::Tally()
 {
 }
 
@@ -44,6 +43,8 @@ void Tally::BeginOfRunAction(const G4Run* /* aRun */)
 void Tally::EndOfRunAction(const G4Run* aRun)
 {
     int nof_events = aRun->GetNumberOfEvent();
+
+    std::cout << "Nof events:" << nof_events << std::endl;
 
 #ifdef G4VIS_USE
     if (G4VVisManager::GetConcreteInstance())
