@@ -1,8 +1,10 @@
-/phsource/energy 160.0 MeV
-/phsource/energySigma 1.0 MeV
-/phsource/radius 20.0 mm
-/phsource/radiusSigma 1.0 mm
-/run/verbose 0
-/event/verbose 0
+/control/verbose 1
 /tracking/verbose 0
+/run/verbose 1
+/event/verbose 0
+
+/control/execute coll.in
+
+/run/initialize
+
 /run/beamOn 10000

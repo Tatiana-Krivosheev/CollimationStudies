@@ -1,0 +1,7 @@
+/GP/det/src_radius 1.0 mm
+/GP/det/src_halfz  10.0 mm
+/GP/det/enc_radius 10.0 mm
+/GP/det/back_halfz 25.0 mm
+/GP/det/coll_radius 10.0 mm
+/GP/det/coll_halfz 25.0 mm
+/GP/det/cout_radius 1.5 mm

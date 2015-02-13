@@ -49,6 +49,8 @@ set(ALL_SCRIPTS
   init.mac
   init_vis.mac
   vis.mac
+  startup.mac
+  coll.in
   )
 
 foreach(_script ${ALL_SCRIPTS})
