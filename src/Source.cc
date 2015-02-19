@@ -51,16 +51,18 @@ double Source::sample_energy()
 // source particle parameters, called per each source event
 void Source::GeneratePrimaries(G4Event* anEvent)
 {
-    double z = _halfz * ( 2.0*G4UniformRand() - 1.0 );
-    double r = _radius * sqrt(G4UniformRand());
+    // here we sample spatial decay vertex uniformly in the cylinder
+    double z   = _halfz * ( 2.0*G4UniformRand() - 1.0 );
     double phi = 2.0 * M_PI * G4UniformRand();
-  
+    double r   = _radius * sqrt(G4UniformRand());
+
     _particleGun->SetParticlePosition(G4ThreeVector(r * cos(phi), r * sin(phi), z));
 
     auto dir = sample_direction();
     _particleGun->SetParticleMomentumDirection(G4ThreeVector(dir._wx, dir._wy, dir._wz));
 
-    _particleGun->SetParticleEnergy(sample_energy());
+    auto e = sample_energy();
+    _particleGun->SetParticleEnergy(e);
 
     _particleGun->GeneratePrimaryVertex(anEvent);
 }
