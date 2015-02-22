@@ -23,7 +23,8 @@ class CollimatorMessenger: public G4UImessenger
     public: virtual ~CollimatorMessenger();
     
     public: virtual void SetNewValue(G4UIcommand*, G4String) override;
-    
+
+#pragma region Data
     private: CollimatorConstruction*  _collimator;
 
     private: G4UIdirectory*           _gpDirectory;
@@ -33,9 +34,20 @@ class CollimatorMessenger: public G4UImessenger
 
     private: G4UIcmdWithADoubleAndUnit* _src_radiusCmd;
     private: G4UIcmdWithADoubleAndUnit* _src_halfzCmd;
+    private: G4UIcmdWithADoubleAndUnit* _src_shiftzCmd;
+    
     private: G4UIcmdWithADoubleAndUnit* _enc_radiusCmd;
-    private: G4UIcmdWithADoubleAndUnit* _back_halfzCmd;
+    private: G4UIcmdWithADoubleAndUnit* _enc_halfzCmd;
+    
+    private: G4UIcmdWithADoubleAndUnit* _opn_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _opn_halfzCmd;
+
+    private: G4UIcmdWithADoubleAndUnit* _pcl_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _pcl_halfzCmd;
+
     private: G4UIcmdWithADoubleAndUnit* _coll_radiusCmd;
     private: G4UIcmdWithADoubleAndUnit* _coll_halfzCmd;
     private: G4UIcmdWithADoubleAndUnit* _cout_radiusCmd;
+#pragma endregion
 };
+

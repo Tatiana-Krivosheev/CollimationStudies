@@ -31,10 +31,29 @@
 
 CollimatorConstruction::CollimatorConstruction():
     G4VUserDetectorConstruction(),
-    _Nickel(nullptr),
-    _Tungsten(nullptr),
-    _Iron(nullptr),
-    _Air(nullptr),
+    _Nickel{nullptr},
+    _Tungsten{nullptr},
+    _Iron{nullptr},
+    _Air{nullptr},
+    
+    _src_radius{-1.0},
+    _src_halfz{-1.0},
+    _src_shiftz{-1.0},
+
+    _enc_radius{-1.0},
+    _enc_halfz{-1.0},
+
+    _opn_radius{-1.0},
+    _opn_halfz{-1.0},
+
+    _pcl_radius{-1.0},
+    _pcl_halfz{-1.0},
+
+    _coll_radius{-1.0},
+    _coll_halfz{-1.0},
+
+    _cout_radius{-1.0},
+    
     _checkOverlaps(true)
 {
     _messenger = new CollimatorMessenger(this);

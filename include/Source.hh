@@ -25,25 +25,8 @@ class Source : public G4VUserPrimaryGeneratorAction
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
-    public: Source(double radius, double halfz);
+    public: Source();
     public: ~Source();
-#pragma endregion
-
-#pragma region Mutators
-    public: static troika sample_direction();
-    public: static double sample_energy();
-
-    public: void GeneratePrimaries(G4Event* anEvent);
-
-    public: void set_radius(double val)
-    {
-        _radius = val;
-    }
-
-    public: void set_halfz(double v)
-    {
-        _halfz = v;
-    }
 #pragma endregion
 
 #pragma region Observers
@@ -55,6 +38,23 @@ class Source : public G4VUserPrimaryGeneratorAction
     public: double halfz() const
     {
         return _halfz;
+    }
+#pragma endregion
+
+    public: static troika sample_direction();
+    public: static double sample_energy();
+
+#pragma region Mutators
+    public: void GeneratePrimaries(G4Event* anEvent);
+
+    public: void set_radius(double val)
+    {
+        _radius = val;
+    }
+
+    public: void set_halfz(double v)
+    {
+        _halfz = v;
     }
 #pragma endregion
 };

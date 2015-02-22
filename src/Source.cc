@@ -11,10 +11,10 @@
 #include "Randomize.hh"
 
 // here you set global source parameters, called once per run
-Source::Source(double Radius, double Halfz):
-    _particleGun(nullptr),
-    _radius(Radius),
-    _halfz(Halfz)
+Source::Source():
+    _particleGun{nullptr},
+    _radius{-1.0},
+    _halfz{-1.0}
 {
     int nof_particles = 1;
 
@@ -66,3 +66,4 @@ void Source::GeneratePrimaries(G4Event* anEvent)
 
     _particleGun->GeneratePrimaryVertex(anEvent);
 }
+
