@@ -1,4 +1,4 @@
-# Macro file for the pre-initialization phase of example B2
+# Macro file for the pre-initialization phase of simulation
 #
 # Set some default verbose
 /control/verbose 2
@@ -10,3 +10,4 @@
 #
 # Initialize kernel
 /run/initialize
+

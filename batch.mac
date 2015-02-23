@@ -3,8 +3,10 @@
 /run/verbose 1
 /event/verbose 0
 
-/control/execute coll.in
+/control/execute C15.in
+/control/execute source.in
 
 /run/initialize
 
 /run/beamOn 10000
+

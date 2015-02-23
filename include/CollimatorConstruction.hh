@@ -26,6 +26,9 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     // Set methods
     private: void DefineMaterials();
     private: G4VPhysicalVolume* DefineVolumes();
+    
+    private: G4LogicalVolume* BuildPrimaryCollimator();
+    private: G4LogicalVolume* BuildSecondaryCollimator();
   
 #pragma region Data
     private: G4LogicalVolume*   _logicTarget;    // pointer to the logical Target
@@ -50,10 +53,15 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: double                _pcl_radius;  // primary collimator external radius, internal same as opening
     private: double                _pcl_halfz;   // primary collimator half Z    
 
+    private: double                _air_gap;     // air gap between primary and secondary collimators
+
     private: double                _coll_radius;
     private: double                _coll_halfz;
-
-    private: double                _cout_radius;
+    
+    private: double                _scl_radius;
+    private: double                _scl_holeA;
+    private: double                _scl_holeB;
+    private: double                _scl_halfz;
   
     private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
 #pragma endregion
@@ -104,6 +112,11 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
         return _pcl_halfz;
     }
 
+    public: double air_gap() const
+    {
+        return _air_gap;
+    }
+
     public: double coll_radius() const
     {
         return _coll_radius;
@@ -113,10 +126,25 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         return _coll_halfz;
     }
-  
-    public: double cout_radius() const
+    
+    public: double scl_radius() const
     {
-        return _cout_radius;
+        return _scl_radius;
+    }
+    
+    public: double scl_holeA() const
+    {
+        return _scl_holeA;
+    }
+
+    public: double scl_holeB() const
+    {
+        return _scl_holeB;
+    }
+
+    public: double scl_halfz() const
+    {
+        return _scl_halfz;
     }
 
     public: bool checkOverlaps() const
@@ -171,6 +199,11 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
         _pcl_halfz = v;
     }
 
+    public: void set_air_gap(double v)
+    {
+        _air_gap = v;
+    }
+
     public: void set_coll_radius(double v)
     {
         _coll_radius = v;
@@ -179,11 +212,26 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     public: void set_coll_halfz(double v)
     {
         _coll_halfz = v;
-    }
-  
-    public: void set_cout_radius(double v)
+    }  
+    
+    public: void set_scl_radius(double v)
     {
-        _cout_radius = v;
+        _scl_radius = v;
+    }
+    
+    public: void set_scl_holeA(double v)
+    {
+        _scl_holeA = v;
+    }
+
+    public: void set_scl_holeB(double v)
+    {
+        _scl_holeB = v;
+    }
+
+    public: void set_scl_halfz(double v)
+    {
+        _scl_halfz = v;
     }
 
     public: void set_checkOverlaps(bool v)
@@ -192,3 +240,4 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     }
 #pragma endregion
 };
+

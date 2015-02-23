@@ -45,9 +45,15 @@ class CollimatorMessenger: public G4UImessenger
     private: G4UIcmdWithADoubleAndUnit* _pcl_radiusCmd;
     private: G4UIcmdWithADoubleAndUnit* _pcl_halfzCmd;
 
+    private: G4UIcmdWithADoubleAndUnit* _air_gapCmd;
+
     private: G4UIcmdWithADoubleAndUnit* _coll_radiusCmd;
     private: G4UIcmdWithADoubleAndUnit* _coll_halfzCmd;
-    private: G4UIcmdWithADoubleAndUnit* _cout_radiusCmd;
+    
+    private: G4UIcmdWithADoubleAndUnit* _scl_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _scl_holeACmd;
+    private: G4UIcmdWithADoubleAndUnit* _scl_holeBCmd;
+    private: G4UIcmdWithADoubleAndUnit* _scl_halfzCmd;
 #pragma endregion
 };
 

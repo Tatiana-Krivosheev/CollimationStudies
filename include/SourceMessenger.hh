@@ -20,10 +20,10 @@ class SourceMessenger : public G4UImessenger
 #pragma region Data
     private: Source* _source;
 
-    private: G4UIdirectory*           _detDirectory;
+    private: G4UIdirectory*           _srcDirectory;
 
 	private: G4UIcmdWithADoubleAndUnit* _radiusCmd;
-	private: G4UIcmdWithADoubleAndUnit* _halzCmd;
+	private: G4UIcmdWithADoubleAndUnit* _halfzCmd;
 #pragma endregion
 };
 

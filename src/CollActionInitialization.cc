@@ -20,7 +20,7 @@ void CollActionInitialization::BuildForMaster() const
 
 void CollActionInitialization::Build() const
 {
-    SetUserAction(new Source(1.0*mm, 10.0*mm));
+    SetUserAction(new Source());
     SetUserAction(new Tally);
     // SetUserAction(new EventAction);
 }  

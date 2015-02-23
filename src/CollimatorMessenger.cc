@@ -17,10 +17,21 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _enc_radiusCmd{nullptr},
     _enc_halfzCmd{nullptr},
     
-    _back_halfzCmd{nullptr},
+    _opn_radiusCmd{nullptr},
+    _opn_halfzCmd{nullptr},
+
+    _pcl_radiusCmd{nullptr},
+    _pcl_halfzCmd{nullptr},
+    
+    _air_gapCmd{nullptr},
+
     _coll_radiusCmd{nullptr},
     _coll_halfzCmd{nullptr},
-    _cout_radiusCmd{nullptr}
+    
+    _scl_radiusCmd{nullptr},
+    _scl_holeACmd{nullptr},
+    _scl_holeBCmd{nullptr},
+    _scl_halfzCmd{nullptr}
 {
     _gpDirectory = new G4UIdirectory("/GP/");
     _gpDirectory->SetGuidance("Place where all GP commands are living.");
@@ -91,6 +102,13 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _pcl_halfzCmd->SetRange("pcl_halfz>0.0");
     _pcl_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
+    _air_gapCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/air_gap", this);
+    _air_gapCmd->SetGuidance("Set air gap between primary and secondary collimator");
+    _air_gapCmd->SetParameterName("air_gap",false);
+    _air_gapCmd->SetUnitCategory("Length");
+    _air_gapCmd->SetRange("air_gap>0.0");
+    _air_gapCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
     _coll_radiusCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/coll_radius", this);
     _coll_radiusCmd->SetGuidance("Set collimator radius");
     _coll_radiusCmd->SetParameterName("coll_radius",false);
@@ -105,12 +123,33 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _coll_halfzCmd->SetRange("coll_halfz>0.0");
     _coll_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);  
     
-    _cout_radiusCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/cout_radius", this);
-    _cout_radiusCmd->SetGuidance("Set collimator opening radius");
-    _cout_radiusCmd->SetParameterName("cout_radius",false);
-    _cout_radiusCmd->SetUnitCategory("Length");
-    _cout_radiusCmd->SetRange("cout_radius>0.0");
-    _cout_radiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);  
+    _scl_radiusCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/scl_radius", this);
+    _scl_radiusCmd->SetGuidance("Set secondary collimator radius");
+    _scl_radiusCmd->SetParameterName("scl_radius",false);
+    _scl_radiusCmd->SetUnitCategory("Length");
+    _scl_radiusCmd->SetRange("scl_radius>0.0");
+    _scl_radiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    
+    _scl_halfzCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/scl_halfz", this);
+    _scl_halfzCmd->SetGuidance("Set secondary collimator halfz");
+    _scl_halfzCmd->SetParameterName("scl_halfz",false);
+    _scl_halfzCmd->SetUnitCategory("Length");
+    _scl_halfzCmd->SetRange("scl_halfz>0.0");
+    _scl_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    _scl_holeACmd = new G4UIcmdWithADoubleAndUnit("/GP/det/scl_holeA", this);
+    _scl_holeACmd->SetGuidance("Set secondary collimator in opening");
+    _scl_holeACmd->SetParameterName("scl_holeA", false);
+    _scl_holeACmd->SetUnitCategory("Length");
+    _scl_holeACmd->SetRange("scl_holeA>0.0");
+    _scl_holeACmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    _scl_holeBCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/scl_holeB", this);
+    _scl_holeBCmd->SetGuidance("Set secondary collimator out opening");
+    _scl_holeBCmd->SetParameterName("scl_holeB", false);
+    _scl_holeBCmd->SetUnitCategory("Length");
+    _scl_holeBCmd->SetRange("scl_holeB>0.0");
+    _scl_holeBCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
     /*
     _stepMaxCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/stepMax",this);
@@ -139,9 +178,15 @@ CollimatorMessenger::~CollimatorMessenger()
     delete _pcl_radiusCmd;
     delete _pcl_halfzCmd;
 
+    delete _air_gapCmd;
+
     delete _coll_radiusCmd;
     delete _coll_halfzCmd;
-    delete _cout_radiusCmd;
+    
+    delete _scl_radiusCmd;
+    delete _scl_holeACmd;
+    delete _scl_holeBCmd;
+    delete _scl_halfzCmd;
     
     delete _detDirectory;
     delete _gpDirectory;
@@ -209,6 +254,12 @@ void CollimatorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         return;
     }
 
+    if (command == _air_gapCmd)
+    {
+        _collimator->set_air_gap(_air_gapCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
     if (command == _coll_radiusCmd)
     {
         _collimator->set_coll_radius(_coll_radiusCmd->GetNewDoubleValue(newValue));
@@ -221,9 +272,28 @@ void CollimatorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         return;
     }
         
-    if (command == _cout_radiusCmd)
+    if (command == _scl_radiusCmd)
     {
-        _collimator->set_cout_radius(_cout_radiusCmd->GetNewDoubleValue(newValue));
+        _collimator->set_scl_radius(_scl_radiusCmd->GetNewDoubleValue(newValue));
         return;
-    }    
+    }
+
+    if (command == _scl_halfzCmd)
+    {
+        _collimator->set_scl_halfz(_scl_halfzCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
+    if (command == _scl_holeACmd)
+    {
+        _collimator->set_scl_holeA(_scl_holeACmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
+    if (command == _scl_holeBCmd)
+    {
+        _collimator->set_scl_holeB(_scl_holeBCmd->GetNewDoubleValue(newValue));
+        return;
+    }
 }
+
