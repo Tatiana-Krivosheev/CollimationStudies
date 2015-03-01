@@ -51,6 +51,7 @@ set(ALL_SCRIPTS
   vis.mac
   startup.mac
   C15.in
+  C25.in
   source.in
   )
 
