@@ -31,7 +31,8 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _scl_radiusCmd{nullptr},
     _scl_holeACmd{nullptr},
     _scl_holeBCmd{nullptr},
-    _scl_halfzCmd{nullptr}
+    _scl_halfzCmd{nullptr},
+    _checkOverlapsCmd{nullptr}
 {
     _gpDirectory = new G4UIdirectory("/GP/");
     _gpDirectory->SetGuidance("Place where all GP commands are living.");
@@ -187,6 +188,8 @@ CollimatorMessenger::~CollimatorMessenger()
     delete _scl_holeACmd;
     delete _scl_holeBCmd;
     delete _scl_halfzCmd;
+    
+    delete _checkOverlapsCmd;
     
     delete _detDirectory;
     delete _gpDirectory;

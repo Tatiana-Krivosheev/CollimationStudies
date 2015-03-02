@@ -59,7 +59,15 @@ CollimatorConstruction::CollimatorConstruction():
     _scl_holeB{-1.0},
     _scl_halfz{-1.0},
     
-    _checkOverlaps(true)
+    _checkOverlaps{true},
+    
+    _grayIron{nullptr},
+    _blueCobalt{nullptr},
+    _graySS{nullptr},
+    _grayAl{nullptr},
+    _blackLead{nullptr},
+    _clrTungsten{nullptr}
+    
 {
     _messenger = new CollimatorMessenger(this);
 }
@@ -72,6 +80,7 @@ CollimatorConstruction::~CollimatorConstruction()
 G4VPhysicalVolume* CollimatorConstruction::Construct()
 {
     DefineMaterials();
+    DefineColors();
 
     return DefineVolumes();
 }
@@ -97,11 +106,39 @@ void CollimatorConstruction::DefineMaterials()
     std::cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
+void CollimatorConstruction::DefineColors()
+{
+    _grayIron = new G4VisAttributes(G4Colour(0.5 ,0.5 ,0.5));
+    _grayIron -> SetVisibility(true);
+    _grayIron -> SetForceSolid(true);
+
+    _blueCobalt = new G4VisAttributes(G4Colour(0. ,0. ,0.7));
+    _blueCobalt -> SetVisibility(true);
+    _blueCobalt -> SetForceSolid(true);
+
+    _graySS = new G4VisAttributes(G4Colour(0.9 ,0.9 ,0.9));
+    _graySS -> SetVisibility(true);
+    _graySS -> SetForceSolid(true);
+
+    _grayAl = new G4VisAttributes(G4Colour(0.7 ,0.7 ,0.7));
+    _grayAl -> SetVisibility(true);
+    _grayAl -> SetForceSolid(true);
+
+    _blackLead = new G4VisAttributes(G4Colour(0.2 ,0.2 ,0.2));
+    _blackLead -> SetVisibility(true);
+    _blackLead -> SetForceSolid(true);
+ 
+    _clrTungsten = new G4VisAttributes(G4Colour(0.3 ,0.3 ,0.6));
+    _clrTungsten -> SetVisibility(true);
+    _clrTungsten -> SetForceSolid(true);
+}
+
 G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
 {
     // Enclosure around primary collimator
     auto encTube = new G4Tubs("enclosure", 0.0, _enc_radius, _enc_halfz, 0.0*deg, 360.0*deg);
     auto encLV   = new G4LogicalVolume(encTube, _Iron, "enclosure", 0, 0, 0);
+    encLV->SetVisAttributes(_grayIron);
     
     // Source
     auto sourceTube = new G4Tubs("source", 0.0, _src_radius, _src_halfz, 0.0*deg, 360.0*deg);
@@ -115,6 +152,7 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps 
+    sourceLV->SetVisAttributes(_blueCobalt);
                       
     // Primary opening
     auto opnTube = new G4Tubs("opening", 0.0, _opn_radius, _opn_halfz, 0.0*deg, 360.0*deg);
@@ -128,6 +166,7 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps 
+    opnLV->SetVisAttributes(_grayAl);
     
     // Primary tungsten collimator
     auto pclTube = new G4Tubs("PCL", _opn_radius, _pcl_radius, _pcl_halfz, 0.0*deg, 360.0*deg);
@@ -141,7 +180,7 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps 
-    
+    pclLV->SetVisAttributes(_clrTungsten);
     
     return encLV;
 }
@@ -163,6 +202,7 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
                       false,                // no boolean operations
                       0,                    // copy number
                       _checkOverlaps);      // checking overlaps 
+    ironLV->SetVisAttributes(_grayIron);
     
     // tungsten secondary collimator
     auto sclCone = new G4Cons("scl", _scl_holeA, _scl_radius, _scl_holeB, _scl_radius, _scl_halfz, 0.0*deg, 360.0*deg);
@@ -175,86 +215,80 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
                       false,                       // no boolean operations
                       0,                           // copy number
                       _checkOverlaps);             // checking overlaps
+    sclLV->SetVisAttributes(_clrTungsten);
     
     return airLV;
 }
 
+// Definitions of Solids, Logical Volumes, Physical Volumes
 G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
-{
-    // Definitions of Solids, Logical Volumes, Physical Volumes
+{    
     // World
-    double wl = 60.0*cm;
-  
-    G4GeometryManager::GetInstance()->SetWorldMaximumExtent(wl);
-
+    double worldXY = 10.0*cm;
+    double worldZ  = 60.0*cm;
+    
+    G4GeometryManager::GetInstance()->SetWorldMaximumExtent(worldZ);
+    
     std::cout << "Computed tolerance = "
               << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
               << " mm" << G4endl;
 
-    G4Box* worldS = new G4Box("world",  0.5*wl, 0.5*wl, 0.5*wl);
-    G4LogicalVolume* worldLV = new G4LogicalVolume( worldS,   //its solid
-                                                    _Air,     //its material
-                                                  "World" ); //its name
+    auto worldBox = new G4Box("World",  0.5*worldXY, 0.5*worldXY, 0.5*worldZ);
+    auto worldLV  = new G4LogicalVolume( worldBox,  // its solid
+                                         _Air,      // its material
+                                        "World" );  // its name
   
     G4VPhysicalVolume* worldPV = new G4PVPlacement(
-                 0,               // no rotation
+                 nullptr,         // no rotation
                  G4ThreeVector(), // at (0,0,0)
                  worldLV,         // its logical volume
                  "World",         // its name
                  nullptr,         // its mother volume
                  false,           // no boolean operations
                  0,               // copy number
-                 _checkOverlaps); // checking overlaps 
+                 _checkOverlaps); // checking overlaps
                  
+    //     
+    // Envelope
+    //
+    auto solidEnv = new G4Box("Envelope",                    
+                               0.5*0.9*worldXY, 0.5*0.9*worldXY, 0.5*0.9*worldZ);
+      
+    auto logicEnv = new G4LogicalVolume(solidEnv,         //its solid
+                                        _Air,             //its material
+                                       "Envelope");       //its name
+               
+    new G4PVPlacement(0,                       //no rotation
+                      G4ThreeVector(),         //at (0,0,0)
+                      logicEnv,                //its logical volume
+                      "Envelope",              //its name
+                      worldLV,                 //its mother  volume
+                      false,                   //no boolean operation
+                      0,                       //copy number
+                      _checkOverlaps);          //overlaps checking
+  
     auto priColl = BuildPrimaryCollimator();
-    auto secColl = BuildSecondaryCollimator(); 
      
     new G4PVPlacement(nullptr,                               // no rotation
 		              G4ThreeVector(0.0, 0.0, -_src_shiftz), // position primary collimator such that center is at source
 		              priColl,         // its logical volume
                       "PCL",           // its name
-                      worldLV,         // its mother volume
+                      logicEnv,        // its mother volume
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps 
 
+    auto secColl = BuildSecondaryCollimator(); 
     new G4PVPlacement(nullptr,                             // no rotation
 		              G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz), // secondary collimator after primary with air gap in between
 		              secColl,         // its logical volume
                       "SCL",           // its name
-                      worldLV,         // its mother volume
+                      logicEnv,        // its mother volume
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps 
 
-    // Visualization attributes
-    // Visualisation attributes of all elements colours 
-    G4VisAttributes * grayIron = new G4VisAttributes(G4Colour(0.5 ,0.5 ,0.5));
-    grayIron -> SetVisibility(true);
-    grayIron -> SetForceSolid(true);
-
-    G4VisAttributes * blueCobalt = new G4VisAttributes(G4Colour(0. ,0. ,0.7));
-    blueCobalt -> SetVisibility(true);
-    blueCobalt -> SetForceSolid(true);
-
-    G4VisAttributes * graySS = new G4VisAttributes(G4Colour(0.9 ,0.9 ,0.9));
-    graySS -> SetVisibility(true);
-    graySS -> SetForceSolid(true);
-
-    G4VisAttributes * grayAl = new G4VisAttributes(G4Colour(0.7 ,0.7 ,0.7));
-    grayAl -> SetVisibility(true);
-    grayAl -> SetForceSolid(true);
-
-    G4VisAttributes * blackLead = new G4VisAttributes(G4Colour(0.2 ,0.2 ,0.2));
-    blackLead -> SetVisibility(true);
-    blackLead -> SetForceSolid(true);
- 
-    G4VisAttributes * colorTungsten = new G4VisAttributes(G4Colour(0.3 ,0.3 ,0.3));
-    colorTungsten -> SetVisibility(true);
-    colorTungsten -> SetForceSolid(true);
- 
     // Always return the physical world
-
     return worldPV;
 }
 

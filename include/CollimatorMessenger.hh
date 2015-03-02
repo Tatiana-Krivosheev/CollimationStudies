@@ -54,6 +54,8 @@ class CollimatorMessenger: public G4UImessenger
     private: G4UIcmdWithADoubleAndUnit* _scl_holeACmd;
     private: G4UIcmdWithADoubleAndUnit* _scl_holeBCmd;
     private: G4UIcmdWithADoubleAndUnit* _scl_halfzCmd;
+    
+    private: G4UIcmdWithADoubleAndUnit* _checkOverlapsCmd;
 #pragma endregion
 };
 

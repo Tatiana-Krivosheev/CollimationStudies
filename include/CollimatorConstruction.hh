@@ -8,6 +8,7 @@
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
+class G4VisAttributes;
 
 class G4Material;
 class G4UserLimits;
@@ -25,6 +26,7 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
 
     // Set methods
     private: void DefineMaterials();
+    private: void DefineColors();
     private: G4VPhysicalVolume* DefineVolumes();
     
     private: G4LogicalVolume* BuildPrimaryCollimator();
@@ -64,6 +66,13 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: double                _scl_halfz;
   
     private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
+    
+    private: G4VisAttributes*      _grayIron;
+    private: G4VisAttributes*      _blueCobalt;
+    private: G4VisAttributes*      _graySS;
+    private: G4VisAttributes*      _grayAl;
+    private: G4VisAttributes*      _blackLead;
+    private: G4VisAttributes*      _clrTungsten;    
 #pragma endregion
   
 #pragma region Observers
