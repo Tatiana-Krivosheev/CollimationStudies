@@ -56,10 +56,10 @@ void Source::GeneratePrimaries(G4Event* anEvent)
     double phi = 2.0 * M_PI * G4UniformRand();
     double r   = _radius * sqrt(G4UniformRand());
 
-    _particleGun->SetParticlePosition(G4ThreeVector(r * cos(phi), r * sin(phi), z));
+    // _particleGun->SetParticlePosition(G4ThreeVector(r * cos(phi), r * sin(phi), z));
 
-    auto dir = sample_direction();
-    _particleGun->SetParticleMomentumDirection(G4ThreeVector(dir._wx, dir._wy, dir._wz));
+    // auto dir = sample_direction();
+    // _particleGun->SetParticleMomentumDirection(G4ThreeVector(dir._wx, dir._wy, dir._wz));
 
     auto e = sample_energy();
     _particleGun->SetParticleEnergy(e);

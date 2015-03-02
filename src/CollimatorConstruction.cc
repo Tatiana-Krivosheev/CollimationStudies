@@ -169,13 +169,13 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     opnLV->SetVisAttributes(_grayAl);
     
     // Primary tungsten collimator
-    auto pclTube = new G4Tubs("PCL", _opn_radius, _pcl_radius, _pcl_halfz, 0.0*deg, 360.0*deg);
-    auto pclLV   = new G4LogicalVolume(pclTube, _Tungsten, "PCL", 0, 0, 0);
+    auto pclTube = new G4Tubs("pcl", _opn_radius, _pcl_radius, _pcl_halfz, 0.0*deg, 360.0*deg);
+    auto pclLV   = new G4LogicalVolume(pclTube, _Tungsten, "pcl", 0, 0, 0);
     
     new G4PVPlacement(nullptr,                             // no rotation
 		              G4ThreeVector(0.0, 0.0, _enc_halfz - _pcl_halfz - 0.5*(_opn_halfz - _pcl_halfz)), // primary collimator starts at the same as opening position
 		              pclLV,           // its logical volume
-                      "PCL",           // its name
+                      "pcl",           // its name
                       encLV,           // its mother volume
                       false,           // no boolean operations
                       0,               // copy number
