@@ -66,8 +66,9 @@ CollimatorConstruction::CollimatorConstruction():
     _graySS{nullptr},
     _grayAl{nullptr},
     _blackLead{nullptr},
-    _clrTungsten{nullptr}
-
+    _clrTungsten{nullptr},
+    
+    _scoringVolume{nullptr}
 {
     _messenger = new CollimatorMessenger(this);
 }
@@ -145,8 +146,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     auto sourceLV   = new G4LogicalVolume(sourceTube, _Nickel, "source", 0, 0, 0);
 
     new G4PVPlacement(nullptr,                              // no rotation
-		                  G4ThreeVector(0.0, 0.0, _src_shiftz), // at (0,0,shiftz)
-		                  sourceLV,        // its logical volume
+		              G4ThreeVector(0.0, 0.0, _src_shiftz), // at (0,0,shiftz)
+		              sourceLV,        // its logical volume
                       "source",        // its name
                       encLV,           // its mother volume
                       false,           // no boolean operations
@@ -287,6 +288,24 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps
+                      
+    // build scoring volume as thin (0.1mm) air-filled disk
+    auto scorerTube = new G4Tubs("Scorer", 0.0, 25.0*mm, 0.05*mm, 0.0*deg, 360.0*deg);
+    auto scorerVol  = new G4LogicalVolume(scorerTube,     //its solid
+                                          _Air,           //its material
+                                         "Scorer");       //its name
+                                         
+    new G4PVPlacement(nullptr,                             // no rotation
+		              G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz + _coll_halfz + 10.0*mm), // secondary collimator center plus collimator half_z plus 10mm
+		              scorerVol,       // its logical volume
+                      "Scorer",        // its name
+                      logicEnv,        // its mother volume
+                      false,           // no boolean operations
+                      0,               // copy number
+                      _checkOverlaps); // checking overlaps    
+                    
+    _scoringVolume = scorerVol;
+    _scoringVolume->SetVisAttributes(_blueCobalt);
 
     // Always return the physical world
     return worldPV;

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include "SteppingAction.hh"
 #include "CollimatorConstruction.hh"
@@ -23,28 +24,43 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     if (_scoringVolume == nullptr)
     { 
         const CollimatorConstruction* coll = static_cast<const CollimatorConstruction*>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-        _scoringVolume = nullptr; // coll->GetScoringVolume();   
+        _scoringVolume = coll->GetScoringVolume();   
     }
 
+    // get step start point
+    const G4StepPoint* pt = step->GetPreStepPoint();
+
     // get volume of the current step
-    G4LogicalVolume* volume = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
+    G4LogicalVolume* volume = pt->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
       
-    // check if we are in scoring volume
     if (volume == nullptr)
         return;
     
+    // check if we are in scoring volume
     if (volume != _scoringVolume)
         return;
-
-    // collect energy deposited in this step
-    const G4StepPoint* pt = step->GetPreStepPoint();
-    auto pos = pt->GetPosition();
-    auto chg = pt->GetCharge();
-    if (chg != 0.0)
-        std::cout << "Electron: ";
-    else
-        std::cout << "Photon  : ";
     
-    std::cout << pos.x() << " " << pos.y() << " " << pos.z() << std::endl;
+    // get all particle coordinates    
+    auto pos = pt->GetPosition();
+    auto dir = pt->GetMomentumDirection();
+    auto ekn = pt->GetKineticEnergy();
+    auto wgt = pt->GetWeight();
+    
+    auto chg = pt->GetCharge();
+    
+    if (chg == 0.0)
+        std::cout << "G: "; // gamma, a.k.a. photon
+    else
+    {
+        if (chg < 0.0)
+            std::cout << "E: "; // electron
+        else
+            std::cout << "P: "; // positron
+    }
+    
+    std::cout << std::scientific << std::setw(14) << std::setprecision(4);
+    std::cout << wgt << ekn
+              << pos.x() << pos.y() << pos.z()
+              << dir.x() << dir.y() << dir.z() << "\n";
 }
 

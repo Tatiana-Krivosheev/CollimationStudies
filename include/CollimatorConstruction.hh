@@ -19,10 +19,15 @@ class CollimatorMessenger;
 
 class CollimatorConstruction : public G4VUserDetectorConstruction
 {
-    public: CollimatorConstruction();
+    public:          CollimatorConstruction();
     public: virtual ~CollimatorConstruction();
 
     public: virtual G4VPhysicalVolume* Construct() override;
+    
+    public: G4LogicalVolume* GetScoringVolume() const
+    {
+        return _scoringVolume;
+    }
 
     // Set methods
     private: void DefineMaterials();
@@ -33,8 +38,6 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: G4LogicalVolume* BuildSecondaryCollimator();
   
 #pragma region Data
-    private: G4LogicalVolume*   _logicTarget;    // pointer to the logical Target
-
     private: G4Material*        _Nickel;         // pointer to the source material
     private: G4Material*        _Tungsten;       // pointer to the collimator material
     private: G4Material*        _Iron;           // pointer to the shielding material
@@ -73,6 +76,8 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: G4VisAttributes*      _grayAl;
     private: G4VisAttributes*      _blackLead;
     private: G4VisAttributes*      _clrTungsten;    
+    
+    private: G4LogicalVolume*      _scoringVolume;
 #pragma endregion
   
 #pragma region Observers
