@@ -51,13 +51,13 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     auto chg = pt->GetCharge();
     
     if (chg == 0.0)
-        std::cout << "G: "; // gamma, a.k.a. photon
+        std::cout << "GGG: "; // gamma, a.k.a. photon
     else
     {
         if (chg < 0.0)
-            std::cout << "E: "; // electron
+            std::cout << "EEE: "; // electron
         else
-            std::cout << "P: "; // positron
+            std::cout << "PPP: "; // positron
     }
     
     std::cout << std::scientific << std::setw(15) << std::setprecision(4) << wgt
@@ -67,6 +67,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
               << std::scientific << std::setw(15) << std::setprecision(4) << pos.z()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.x()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.y()
-              << std::scientific << std::setw(15) << std::setprecision(4) << dir.z() << "\n";
+              << std::scientific << std::setw(15) << std::setprecision(4) << dir.z() << std::endl;
 }
 

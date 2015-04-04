@@ -1,13 +1,15 @@
-/control/verbose 1
-/tracking/verbose 1
-/run/verbose 1
-/event/verbose 1
+/control/verbose 0
+/tracking/verbose 0
+/run/verbose 0
+/event/verbose 0
 
 /control/execute C15.in
+
+/run/numberOfThreads 1
 
 /run/initialize
 
 /control/execute source.in
 
-/run/beamOn 1
+/run/beamOn 1000000
 
