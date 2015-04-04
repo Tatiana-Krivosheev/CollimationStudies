@@ -78,6 +78,8 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: G4VisAttributes*      _clrTungsten;    
     
     private: G4LogicalVolume*      _scoringVolume;
+    
+    private: G4UserLimits*         _stepLimit;            // pointer to user step limits
 #pragma endregion
   
 #pragma region Observers
@@ -252,6 +254,8 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         _checkOverlaps = v;
     }
+    
+    public: void set_maxStep(double step);
 #pragma endregion
 };
 

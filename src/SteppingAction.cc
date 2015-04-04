@@ -24,7 +24,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     if (_scoringVolume == nullptr)
     { 
         const CollimatorConstruction* coll = static_cast<const CollimatorConstruction*>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-        _scoringVolume = coll->GetScoringVolume();   
+        _scoringVolume = coll->GetScoringVolume();
+        
+        std::cout << "Scoring volume assigned: " << (void*)_scoringVolume << std::endl;
     }
 
     // get step start point
@@ -58,9 +60,13 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             std::cout << "P: "; // positron
     }
     
-    std::cout << std::scientific << std::setw(14) << std::setprecision(4);
-    std::cout << wgt << ekn
-              << pos.x() << pos.y() << pos.z()
-              << dir.x() << dir.y() << dir.z() << "\n";
+    std::cout << std::scientific << std::setw(15) << std::setprecision(4) << wgt
+              << std::scientific << std::setw(15) << std::setprecision(4) << ekn
+              << std::scientific << std::setw(15) << std::setprecision(4) << pos.x()
+              << std::scientific << std::setw(15) << std::setprecision(4) << pos.y()
+              << std::scientific << std::setw(15) << std::setprecision(4) << pos.z()
+              << std::scientific << std::setw(15) << std::setprecision(4) << dir.x()
+              << std::scientific << std::setw(15) << std::setprecision(4) << dir.y()
+              << std::scientific << std::setw(15) << std::setprecision(4) << dir.z() << "\n";
 }
 

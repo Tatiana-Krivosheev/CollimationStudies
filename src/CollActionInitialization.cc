@@ -3,6 +3,7 @@
 #include "CollEventAction.hh"
 #include "Source.hh"
 #include "Tally.hh"
+#include "SteppingAction.hh"
 
 CollActionInitialization::CollActionInitialization():
     G4VUserActionInitialization()
@@ -21,6 +22,7 @@ void CollActionInitialization::BuildForMaster() const
 void CollActionInitialization::Build() const
 {
     SetUserAction(new Source());
-    SetUserAction(new Tally);
+    SetUserAction(new Tally());
+    SetUserAction(new SteppingAction());
     // SetUserAction(new EventAction);
 }  

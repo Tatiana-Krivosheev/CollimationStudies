@@ -68,7 +68,8 @@ CollimatorConstruction::CollimatorConstruction():
     _blackLead{nullptr},
     _clrTungsten{nullptr},
     
-    _scoringVolume{nullptr}
+    _scoringVolume{nullptr},
+    _stepLimit{nullptr}
 {
     _messenger = new CollimatorMessenger(this);
 }
@@ -76,6 +77,7 @@ CollimatorConstruction::CollimatorConstruction():
 CollimatorConstruction::~CollimatorConstruction()
 {
     delete _messenger;
+    delete _stepLimit;
 }
 
 G4VPhysicalVolume* CollimatorConstruction::Construct()
@@ -158,7 +160,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     // Primary opening
     auto opnTube = new G4Tubs("opening", 0.0, _opn_radius, _opn_halfz, 0.0*deg, 360.0*deg);
     auto opnLV   = new G4LogicalVolume(opnTube, _Air, "opening", 0, 0, 0);
-
+    opnLV->SetUserLimits(_stepLimit);
+   
     new G4PVPlacement(nullptr,                             // no rotation
 		              G4ThreeVector(0.0, 0.0, _enc_halfz - _opn_halfz), // opening at the end of the enclosure
 		              opnLV,           // its logical volume
@@ -172,6 +175,7 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     // Primary tungsten collimator
     auto pclTube = new G4Tubs("pcl", _opn_radius, _pcl_radius, _pcl_halfz, 0.0*deg, 360.0*deg);
     auto pclLV   = new G4LogicalVolume(pclTube, _Tungsten, "pcl", 0, 0, 0);
+    pclLV->SetUserLimits(_stepLimit);
 
     new G4PVPlacement(nullptr,                             // no rotation
 		              G4ThreeVector(0.0, 0.0, _enc_halfz - _pcl_halfz - 2.0*(_opn_halfz - _pcl_halfz)), // primary collimator starts at the same as opening position
@@ -191,6 +195,8 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
     // Air volume around secondary collimator
     auto airTube = new G4Tubs("aircyl", 0.0, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
     auto airLV   = new G4LogicalVolume(airTube, _Air, "aircyl", 0, 0, 0);
+    airLV->SetVisAttributes(_blueCobalt);
+    airLV->SetUserLimits(_stepLimit);
 
     // Iron enclosure tube inside
     auto ironTube = new G4Tubs("irontube", _scl_radius, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
@@ -204,6 +210,7 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
                       0,                    // copy number
                       _checkOverlaps);      // checking overlaps
     ironLV->SetVisAttributes(_grayIron);
+    ironLV->SetUserLimits(_stepLimit);
 
     // tungsten secondary collimator
     auto sclCone = new G4Cons("scl", _scl_holeA, _scl_radius, _scl_holeB, _scl_radius, _scl_halfz, 0.0*deg, 360.0*deg);
@@ -217,6 +224,7 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
                       0,                           // copy number
                       _checkOverlaps);             // checking overlaps
     sclLV->SetVisAttributes(_clrTungsten);
+    sclLV->SetUserLimits(_stepLimit);
 
     return airLV;
 }
@@ -233,6 +241,9 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
     std::cout << "Computed tolerance = "
               << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
               << " mm" << G4endl;
+              
+    double maxStep = 0.01*mm;
+    _stepLimit = new G4UserLimits(maxStep);
 
     auto worldBox = new G4Box("World",  0.5*worldXY, 0.5*worldXY, 0.5*worldZ);
     auto worldLV  = new G4LogicalVolume( worldBox,  // its solid
@@ -252,12 +263,13 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
     //
     // Envelope
     //
-    auto solidEnv = new G4Box("Envelope",
-                               0.5*0.9*worldXY, 0.5*0.9*worldXY, 0.5*0.9*worldZ);
+    auto solidEnv = new G4Box("Envelope", 0.5*0.9*worldXY, 0.5*0.9*worldXY, 0.5*0.9*worldZ);
 
     auto logicEnv = new G4LogicalVolume(solidEnv,         //its solid
                                         _Air,             //its material
                                        "Envelope");       //its name
+    logicEnv->SetUserLimits(_stepLimit);
+                                       
 
     new G4PVPlacement(0,                       //no rotation
                       G4ThreeVector(),         //at (0,0,0)
@@ -306,15 +318,16 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                     
     _scoringVolume = scorerVol;
     _scoringVolume->SetVisAttributes(_blueCobalt);
-
+    
     // Always return the physical world
     return worldPV;
 }
 
-/*
-void CollimatorConstruction::SetMaxStep(G4double maxStep)
+void CollimatorConstruction::set_maxStep(double maxStep)
 {
     if (_stepLimit != nullptr && maxStep > 0.0)
+    {
         _stepLimit->SetMaxAllowedStep(maxStep);
+    }
 }
-*/
+

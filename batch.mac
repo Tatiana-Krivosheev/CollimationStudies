@@ -1,12 +1,12 @@
 /control/verbose 1
-/tracking/verbose 0
+/tracking/verbose 1
 /run/verbose 1
-/event/verbose 0
+/event/verbose 1
 
 /control/execute C15.in
 /control/execute source.in
 
 /run/initialize
 
-/run/beamOn 10000
+/run/beamOn 1
 

@@ -21,11 +21,12 @@ Source::Source():
     _particleGun = new G4ParticleGun(nof_particles);
 
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    G4String particleName = "gamma";
+    G4String particleName = "geantino";
     _particleGun->SetParticleDefinition(particleTable->FindParticle(particleName));
 
-    _particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-    _particleGun->SetParticleEnergy(0.0);
+    _particleGun->SetParticlePosition(G4ThreeVector(0., 0., 0.));
+    _particleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
+    _particleGun->SetParticleEnergy(1000.0*MeV);
 }
 
 Source::~Source()
@@ -60,9 +61,12 @@ void Source::GeneratePrimaries(G4Event* anEvent)
 
     // auto dir = sample_direction();
     // _particleGun->SetParticleMomentumDirection(G4ThreeVector(dir._wx, dir._wy, dir._wz));
-
+    
+    
+    /*
     auto e = sample_energy();
     _particleGun->SetParticleEnergy(e);
+    */
 
     _particleGun->GeneratePrimaryVertex(anEvent);
 }
