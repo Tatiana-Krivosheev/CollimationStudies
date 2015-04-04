@@ -6,8 +6,9 @@
 /control/saveHistory
 
 /control/execute C15.in
-/control/execute source.in
 
 /run/initialize
+
+/control/execute source.in
 
 /run/verbose 2

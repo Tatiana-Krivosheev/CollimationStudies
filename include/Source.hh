@@ -8,6 +8,7 @@
 
 class G4ParticleGun;
 class G4Event;
+class SourceMessenger;
 
 class Source : public G4VUserPrimaryGeneratorAction
 {
@@ -19,6 +20,7 @@ class Source : public G4VUserPrimaryGeneratorAction
   
 #pragma region Data
     private: G4ParticleGun*             _particleGun;
+    private: SourceMessenger*           _sourceMessenger;
 
     private: double _radius;
     private: double _halfz;

@@ -6,6 +6,7 @@
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
+#include "SourceMessenger.hh"
 #include "globals.hh"
 
 #include "Randomize.hh"
@@ -13,6 +14,7 @@
 // here you set global source parameters, called once per run
 Source::Source():
     _particleGun{nullptr},
+    _sourceMessenger{nullptr},
     _radius{-1.0},
     _halfz{-1.0}
 {
@@ -27,11 +29,14 @@ Source::Source():
     _particleGun->SetParticlePosition(G4ThreeVector(0., 0., 0.));
     _particleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
     _particleGun->SetParticleEnergy(1000.0*MeV);
+    
+    _sourceMessenger = new SourceMessenger(this);
 }
 
 Source::~Source()
 {
     delete _particleGun;
+    delete _sourceMessenger;
 }
 
 troika Source::sample_direction()

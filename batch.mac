@@ -4,9 +4,10 @@
 /event/verbose 1
 
 /control/execute C15.in
-/control/execute source.in
 
 /run/initialize
+
+/control/execute source.in
 
 /run/beamOn 1
 

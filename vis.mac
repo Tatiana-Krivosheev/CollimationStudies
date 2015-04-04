@@ -1,5 +1,5 @@
 # Macro file for the visualization setting in the initialization phase 
-# of the B1 example when running in interactive mode
+# of the collimator example when running in interactive mode
 
 # Use these open statements to open selected visualization
 #
@@ -53,10 +53,6 @@
 /vis/scene/endOfEventAction accumulate
 #
 # Decorations
-# Name
-##/vis/set/textColour green
-##/vis/set/textLayout right
-##/vis/scene/add/text2D 0.9 -.9 24 ! ! exampleB1
 /vis/set/textLayout    # Revert to normal (left adjusted) layout
 /vis/set/textColour    # Revert to default text colour (blue)
 #
@@ -74,6 +70,7 @@
 /vis/set/lineWidth     # Revert to default line width (1.)
 #
 # To get nice view
+#
 /vis/geometry/set/visibility World 0 true
 /vis/geometry/set/visibility Envelope 0 true
 /vis/viewer/set/style surface
@@ -81,6 +78,7 @@
 /vis/viewer/set/viewpointThetaPhi 120 150
 #
 # Re-establish auto refreshing and verbosity:
+#
 /vis/viewer/set/autoRefresh true
 /vis/verbose warnings
 #
