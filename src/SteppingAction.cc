@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <mutex>
 
 #include "SteppingAction.hh"
 #include "CollimatorConstruction.hh"
@@ -19,8 +20,14 @@ SteppingAction::~SteppingAction()
 {
 }
 
+static std::mutex mtx;
+
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
+    static const char* PHOTON   = "GGG: ";
+    static const char* ELECTRON = "EEE: ";
+    static const char* POSITRON = "PPP: ";
+
     if (_scoringVolume == nullptr)
     { 
         const CollimatorConstruction* coll = static_cast<const CollimatorConstruction*>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
@@ -50,17 +57,18 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     
     auto chg = pt->GetCharge();
     
-    if (chg == 0.0)
-        std::cout << "GGG: "; // gamma, a.k.a. photon
-    else
+    const char* tag = PHOTON;
+    if (chg != 0.0)
     {
-        if (chg < 0.0)
-            std::cout << "EEE: "; // electron
-        else
-            std::cout << "PPP: "; // positron
+        tag = ELECTRON;
+        if (chg > 0.0)
+            tag = POSITRON;
     }
     
-    std::cout << std::scientific << std::setw(15) << std::setprecision(4) << wgt
+    mtx.lock();
+
+    std::cout << tag
+              << std::scientific << std::setw(15) << std::setprecision(4) << wgt
               << std::scientific << std::setw(15) << std::setprecision(4) << ekn
               << std::scientific << std::setw(15) << std::setprecision(4) << pos.x()
               << std::scientific << std::setw(15) << std::setprecision(4) << pos.y()
@@ -68,5 +76,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.x()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.y()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.z() << std::endl;
+              
+    mtx.unlock();
 }
 

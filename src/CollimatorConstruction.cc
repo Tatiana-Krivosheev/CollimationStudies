@@ -233,7 +233,7 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
 G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
 {
     // World
-    double worldXY = 10.0*cm;
+    double worldXY = 14.0*cm;
     double worldZ  = 60.0*cm;
 
     G4GeometryManager::GetInstance()->SetWorldMaximumExtent(worldZ);
@@ -302,7 +302,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       _checkOverlaps); // checking overlaps
                       
     // build scoring volume as thin (0.1mm) air-filled disk
-    auto scorerTube = new G4Tubs("Scorer", 0.0, 25.0*mm, 0.05*mm, 0.0*deg, 360.0*deg);
+    auto scorerTube = new G4Tubs("Scorer", 0.0, 60.0*mm, 0.02*mm, 0.0*deg, 360.0*deg);
     auto scorerVol  = new G4LogicalVolume(scorerTube,     //its solid
                                           _Air,           //its material
                                          "Scorer");       //its name
