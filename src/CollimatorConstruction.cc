@@ -302,7 +302,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       _checkOverlaps); // checking overlaps
                       
     // build scoring volume as thin (0.1mm) air-filled disk
-    auto scorerTube = new G4Tubs("Scorer", 0.0, 60.0*mm, 0.02*mm, 0.0*deg, 360.0*deg);
+    auto scorerTube = new G4Tubs("Scorer", 0.0, 30.0*mm, 0.02*mm, 0.0*deg, 360.0*deg);
     auto scorerVol  = new G4LogicalVolume(scorerTube,     //its solid
                                           _Air,           //its material
                                          "Scorer");       //its name
