@@ -14,16 +14,17 @@ class Source : public G4VUserPrimaryGeneratorAction
 {
     public: constexpr static double E_lo = 1.17*MeV;
     public: constexpr static double E_hi = 1.33*MeV;
- 
+
     public: constexpr static double P_lo = 0.5;
     public: constexpr static double P_hi = 0.5;
-  
+
 #pragma region Data
     private: G4ParticleGun*             _particleGun;
     private: SourceMessenger*           _sourceMessenger;
 
     private: double _radius;
     private: double _halfz;
+    private: int    _nof_particles; // nof particles to be sampled in an event per one call to source
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
@@ -40,6 +41,11 @@ class Source : public G4VUserPrimaryGeneratorAction
     public: double halfz() const
     {
         return _halfz;
+    }
+
+    public: int nof_particles() const
+    {
+        return _nof_particles;
     }
 #pragma endregion
 

@@ -16,11 +16,10 @@ Source::Source():
     _particleGun{nullptr},
     _sourceMessenger{nullptr},
     _radius{-1.0},
-    _halfz{-1.0}
+    _halfz{-1.0},
+    _nof_particles{10}
 {
-    int nof_particles = 1;
-
-    _particleGun = new G4ParticleGun(nof_particles);
+    _particleGun = new G4ParticleGun( 1 );
 
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
     G4String particleName = "gamma";
@@ -57,23 +56,24 @@ double Source::sample_energy()
 // source particle parameters, called per each source event
 void Source::GeneratePrimaries(G4Event* anEvent)
 {
-    // here we sample spatial decay vertex uniformly in the cylinder
-    double z   = _halfz * ( 2.0*G4UniformRand() - 1.0 );
-    double phi = 2.0 * M_PI * G4UniformRand();
-    double r   = _radius * sqrt(G4UniformRand());
+    for(int k = 0; k != _nof_particles; ++k)
+    {
+        // here we sample spatial decay vertex uniformly in the cylinder
+        double z   = _halfz * ( 2.0*G4UniformRand() - 1.0 );
+        double phi = 2.0 * M_PI * G4UniformRand();
+        double r   = _radius * sqrt(G4UniformRand());
 
-    auto x = r * cos(phi);
-    auto y = r * sin(phi);
-    _particleGun->SetParticlePosition(G4ThreeVector(x, y, z));
+        auto x = r * cos(phi);
+        auto y = r * sin(phi);
+        _particleGun->SetParticlePosition(G4ThreeVector(x, y, z));
 
-    auto dir = sample_direction();
-    _particleGun->SetParticleMomentumDirection(G4ThreeVector(dir._wx, dir._wy, dir._wz));
+        auto dir = sample_direction();
+        _particleGun->SetParticleMomentumDirection(G4ThreeVector(dir._wx, dir._wy, dir._wz));
        
-    auto e = sample_energy();
-    _particleGun->SetParticleEnergy(e);
-    
-    // std::cout << e << " " << x << " " << y << " " << z << "\n";
-
-    _particleGun->GeneratePrimaryVertex(anEvent);
+        auto e = sample_energy();
+        _particleGun->SetParticleEnergy(e);
+        
+        _particleGun->GeneratePrimaryVertex(anEvent);
+    }
 }
 
