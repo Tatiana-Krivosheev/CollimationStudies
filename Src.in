@@ -1,0 +1,9 @@
+/GP/det/enc_radius 25.0 mm
+/GP/det/enc_halfz  37.25 mm
+/GP/det/src_radius 1.7 mm
+/GP/det/src_halfz  5.0 mm
+/GP/det/src_shiftz  19.25 mm
+/GP/det/opn_radius 2.0 mm
+/GP/det/opn_halfz  5.85 mm
+/GP/det/pcl_radius 5.0 mm
+/GP/det/pcl_halfz  5.0 mm
