@@ -52,6 +52,7 @@ set(ALL_SCRIPTS
   startup.mac
   C15.in
   C25.in
+  Src.in
   source.in
   )
 
