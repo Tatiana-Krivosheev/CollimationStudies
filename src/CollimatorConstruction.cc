@@ -61,11 +61,10 @@ CollimatorConstruction::CollimatorConstruction():
 
     _checkOverlaps{true},
 
-    _grayIron{nullptr},
+    _turqIron{nullptr},
     _blueCobalt{nullptr},
     _graySS{nullptr},
     _grayAl{nullptr},
-    _blackLead{nullptr},
     _clrTungsten{nullptr},
     
     _scoringVolume{nullptr},
@@ -111,27 +110,23 @@ void CollimatorConstruction::DefineMaterials()
 
 void CollimatorConstruction::DefineColors()
 {
-    _grayIron = new G4VisAttributes(G4Colour(0.5 ,0.5 ,0.5));
-    _grayIron -> SetVisibility(true);
-    _grayIron -> SetForceSolid(true);
+    _turqIron = new G4VisAttributes(G4Colour(0.25, 0.85, 0.65));
+    _turqIron -> SetVisibility(true);
+    _turqIron -> SetForceSolid(true);
 
-    _blueCobalt = new G4VisAttributes(G4Colour(0. ,0. ,0.7));
+    _blueCobalt = new G4VisAttributes(G4Colour(0.0, 0.0, 0.7));
     _blueCobalt -> SetVisibility(true);
     _blueCobalt -> SetForceSolid(true);
 
-    _graySS = new G4VisAttributes(G4Colour(0.9 ,0.9 ,0.9));
+    _graySS = new G4VisAttributes(G4Colour(0.9, 0.9, 0.9));
     _graySS -> SetVisibility(true);
     _graySS -> SetForceSolid(true);
 
-    _grayAl = new G4VisAttributes(G4Colour(0.7 ,0.7 ,0.7));
+    _grayAl = new G4VisAttributes(G4Colour(0.7, 0.7, 0.7));
     _grayAl -> SetVisibility(true);
     _grayAl -> SetForceSolid(true);
 
-    _blackLead = new G4VisAttributes(G4Colour(0.2 ,0.2 ,0.2));
-    _blackLead -> SetVisibility(true);
-    _blackLead -> SetForceSolid(true);
-
-    _clrTungsten = new G4VisAttributes(G4Colour(0.3 ,0.3 ,0.6));
+    _clrTungsten = new G4VisAttributes(G4Colour(0.9, 0.2, 0.2));
     _clrTungsten -> SetVisibility(true);
     _clrTungsten -> SetForceSolid(true);
 }
@@ -141,7 +136,7 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     // Enclosure around primary collimator
     auto encTube = new G4Tubs("enclosure", 0.0, _enc_radius, _enc_halfz, 0.0*deg, 360.0*deg);
     auto encLV   = new G4LogicalVolume(encTube, _Iron, "enclosure", 0, 0, 0);
-    encLV->SetVisAttributes(_grayIron);
+    encLV->SetVisAttributes(_turqIron);
 
     // Source
     auto sourceTube = new G4Tubs("source", 0.0, _src_radius, _src_halfz, 0.0*deg, 360.0*deg);
@@ -209,7 +204,7 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
                       false,                // no boolean operations
                       0,                    // copy number
                       _checkOverlaps);      // checking overlaps
-    ironLV->SetVisAttributes(_grayIron);
+    ironLV->SetVisAttributes(_turqIron);
     ironLV->SetUserLimits(_stepLimit);
 
     // tungsten secondary collimator

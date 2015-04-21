@@ -70,11 +70,10 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
   
     private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
     
-    private: G4VisAttributes*      _grayIron;
+    private: G4VisAttributes*      _turqIron;
     private: G4VisAttributes*      _blueCobalt;
     private: G4VisAttributes*      _graySS;
     private: G4VisAttributes*      _grayAl;
-    private: G4VisAttributes*      _blackLead;
     private: G4VisAttributes*      _clrTungsten;    
     
     private: G4LogicalVolume*      _scoringVolume;
