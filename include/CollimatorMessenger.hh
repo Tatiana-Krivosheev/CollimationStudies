@@ -39,12 +39,20 @@ class CollimatorMessenger: public G4UImessenger
     private: G4UIcmdWithADoubleAndUnit* _enc_radiusCmd;
     private: G4UIcmdWithADoubleAndUnit* _enc_halfzCmd;
     
+    private: G4UIcmdWithADoubleAndUnit* _sss_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _sss_halfzCmd;
+
     private: G4UIcmdWithADoubleAndUnit* _opn_radiusCmd;
     private: G4UIcmdWithADoubleAndUnit* _opn_halfzCmd;
 
     private: G4UIcmdWithADoubleAndUnit* _pcl_radiusCmd;
     private: G4UIcmdWithADoubleAndUnit* _pcl_halfzCmd;
 
+    private: G4UIcmdWithADoubleAndUnit* _oair_radiusCmd;
+    private: G4UIcmdWithADoubleAndUnit* _oair_halfzCmd;
+
+    private: G4UIcmdWithADoubleAndUnit* _sssair_halfzCmd;
+    
     private: G4UIcmdWithADoubleAndUnit* _air_gapCmd;
 
     private: G4UIcmdWithADoubleAndUnit* _coll_radiusCmd;

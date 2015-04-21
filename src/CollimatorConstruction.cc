@@ -42,6 +42,9 @@ CollimatorConstruction::CollimatorConstruction():
 
     _enc_radius{-1.0},
     _enc_halfz{-1.0},
+    
+    _sss_radius{-1.0},
+    _sss_halfz{-1.0},
 
     _opn_radius{-1.0},
     _opn_halfz{-1.0},
@@ -49,6 +52,11 @@ CollimatorConstruction::CollimatorConstruction():
     _pcl_radius{-1.0},
     _pcl_halfz{-1.0},
 
+    _oair_radius{-1.0},
+    _oair_halfz{-1.0},
+    
+    _sssair_halfz{-1.0},
+    
     _air_gap{-1.0},
 
     _coll_radius{-1.0},
@@ -64,8 +72,8 @@ CollimatorConstruction::CollimatorConstruction():
     _turqIron{nullptr},
     _blueCobalt{nullptr},
     _graySS{nullptr},
-    _grayAl{nullptr},
-    _clrTungsten{nullptr},
+    _grayAir{nullptr},
+    _redTungsten{nullptr},
     
     _scoringVolume{nullptr},
     _stepLimit{nullptr}
@@ -122,84 +130,140 @@ void CollimatorConstruction::DefineColors()
     _graySS -> SetVisibility(true);
     _graySS -> SetForceSolid(true);
 
-    _grayAl = new G4VisAttributes(G4Colour(0.7, 0.7, 0.7));
-    _grayAl -> SetVisibility(true);
-    _grayAl -> SetForceSolid(true);
+    _grayAir = new G4VisAttributes(G4Colour(0.8, 0.8, 0.8));
+    _grayAir -> SetVisibility(true);
+    _grayAir -> SetForceSolid(true);
 
-    _clrTungsten = new G4VisAttributes(G4Colour(0.9, 0.2, 0.2));
-    _clrTungsten -> SetVisibility(true);
-    _clrTungsten -> SetForceSolid(true);
+    _redTungsten = new G4VisAttributes(G4Colour(0.9, 0.2, 0.2));
+    _redTungsten -> SetVisibility(true);
+    _redTungsten -> SetForceSolid(true);
 }
 
 G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
 {
+    const char* primary_enclosure  = "pri_enclosure";
+    const char* primary_sss        = "pri_sss";
+    const char* primary_source     = "pri_source";
+    const char* primary_opening    = "pri_opening";
+    const char* primary_collimator = "pri_col";
+    const char* primary_outair     = "pri_outair";
+    const char* primary_sssair     = "pri_sssair";
+
     // Enclosure around primary collimator
-    auto encTube = new G4Tubs("enclosure", 0.0, _enc_radius, _enc_halfz, 0.0*deg, 360.0*deg);
-    auto encLV   = new G4LogicalVolume(encTube, _Iron, "enclosure", 0, 0, 0);
-    encLV->SetVisAttributes(_turqIron);
+    auto encTube = new G4Tubs(primary_enclosure, 0.0, _enc_radius, _enc_halfz, 0.0*deg, 360.0*deg);
+    auto encLV   = new G4LogicalVolume(encTube, _Tungsten, primary_enclosure, nullptr, nullptr, nullptr);
+    encLV->SetVisAttributes(_redTungsten);
+    
+    // Stainless steel shell
+    auto sssTube = new G4Tubs(primary_sss, 0.0, _sss_radius, _sss_halfz, 0.0*deg, 360.0*deg);
+    auto sssLV   = new G4LogicalVolume(sssTube, _Iron, primary_sss, nullptr, nullptr, nullptr);
+    sssLV->SetUserLimits(_stepLimit);
+    
+    new G4PVPlacement(nullptr,                              // no rotation
+		              G4ThreeVector(0.0, 0.0, _enc_halfz - _sss_halfz), // at the end of the enclosure
+		              sssLV,           // its logical volume
+                      primary_sss,     // its name
+                      encLV,           // its mother volume
+                      false,           // no boolean operations
+                      0,               // copy number
+                      _checkOverlaps); // checking overlaps
+    sssLV->SetVisAttributes(_turqIron);
 
     // Source
-    auto sourceTube = new G4Tubs("source", 0.0, _src_radius, _src_halfz, 0.0*deg, 360.0*deg);
-    auto sourceLV   = new G4LogicalVolume(sourceTube, _Nickel, "source", 0, 0, 0);
+    auto sourceTube = new G4Tubs(primary_source, 0.0, _src_radius, _src_halfz, 0.0*deg, 360.0*deg);
+    auto sourceLV   = new G4LogicalVolume(sourceTube, _Nickel, primary_source, nullptr, nullptr, nullptr);
+    sourceLV->SetUserLimits(_stepLimit);
 
     new G4PVPlacement(nullptr,                              // no rotation
-		              G4ThreeVector(0.0, 0.0, _src_shiftz), // at (0,0,shiftz)
+		              G4ThreeVector(0.0, 0.0, _src_shiftz - (_enc_halfz - _sss_halfz)), // at (0,0,shiftz) relative to enclosure
 		              sourceLV,        // its logical volume
-                      "source",        // its name
-                      encLV,           // its mother volume
+                      primary_source,  // its name
+                      sssLV,           // its mother volume
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps
     sourceLV->SetVisAttributes(_blueCobalt);
 
     // Primary opening
-    auto opnTube = new G4Tubs("opening", 0.0, _opn_radius, _opn_halfz, 0.0*deg, 360.0*deg);
-    auto opnLV   = new G4LogicalVolume(opnTube, _Air, "opening", 0, 0, 0);
+    auto opnTube = new G4Tubs(primary_opening, 0.0, _opn_radius, _opn_halfz, 0.0*deg, 360.0*deg);
+    auto opnLV   = new G4LogicalVolume(opnTube, _Air, primary_opening, nullptr, nullptr, nullptr);
     opnLV->SetUserLimits(_stepLimit);
    
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, _enc_halfz - _opn_halfz), // opening at the end of the enclosure
+		              G4ThreeVector(0.0, 0.0, _sss_halfz - _opn_halfz), // opening at the end of the SS shell
 		              opnLV,           // its logical volume
-                      "opening",       // its name
-                      encLV,           // its mother volume
+                      primary_opening, // its name
+                      sssLV,           // its mother volume
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps
-    opnLV->SetVisAttributes(_grayAl);
+    opnLV->SetVisAttributes(_grayAir);
 
     // Primary tungsten collimator
-    auto pclTube = new G4Tubs("pcl", _opn_radius, _pcl_radius, _pcl_halfz, 0.0*deg, 360.0*deg);
-    auto pclLV   = new G4LogicalVolume(pclTube, _Tungsten, "pcl", 0, 0, 0);
+    auto pclTube = new G4Tubs(primary_collimator, _opn_radius, _pcl_radius, _pcl_halfz, 0.0*deg, 360.0*deg);
+    auto pclLV   = new G4LogicalVolume(pclTube, _Tungsten, primary_collimator, nullptr, nullptr, nullptr);
     pclLV->SetUserLimits(_stepLimit);
 
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, _enc_halfz - _pcl_halfz - 2.0*(_opn_halfz - _pcl_halfz)), // primary collimator starts at the same as opening position
+		              G4ThreeVector(0.0, 0.0, _sss_halfz - _pcl_halfz - 2.0*(_opn_halfz - _pcl_halfz)), // primary collimator starts at the same as opening position
 		              pclLV,           // its logical volume
-                      "pcl",           // its name
+                      primary_collimator,  // its name
+                      sssLV,           // its mother volume
+                      false,           // no boolean operations
+                      0,               // copy number
+                      _checkOverlaps); // checking overlaps
+    pclLV->SetVisAttributes(_redTungsten);
+    
+    // SS shell end air ring
+    auto sssairTube = new G4Tubs(primary_sssair, _opn_radius, _sss_radius, _sssair_halfz, 0.0*deg, 360.0*deg);
+    auto sssairLV   = new G4LogicalVolume(sssairTube, _Air, primary_sssair, nullptr, nullptr, nullptr);
+
+    new G4PVPlacement(nullptr,                             // no rotation
+		              G4ThreeVector(0.0, 0.0, _sss_halfz - _sssair_halfz), // SS shell air end starts at the end of enclosure
+		              sssairLV,        // its logical volume
+                      primary_sssair,  // its name
+                      sssLV,           // its mother volume
+                      false,           // no boolean operations
+                      0,               // copy number
+                      _checkOverlaps); // checking overlaps
+    sssairLV->SetVisAttributes(_grayAir);
+
+    // Outer air ring
+    auto outairTube = new G4Tubs(primary_outair, _sss_radius, _oair_radius, _oair_halfz, 0.0*deg, 360.0*deg);
+    auto outairLV   = new G4LogicalVolume(outairTube, _Air, primary_outair, nullptr, nullptr, nullptr);
+
+    new G4PVPlacement(nullptr,                             // no rotation
+		              G4ThreeVector(0.0, 0.0, _enc_halfz - _oair_halfz), // open air starts at the end of enclosure
+		              outairLV,        // its logical volume
+                      primary_outair,  // its name
                       encLV,           // its mother volume
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps
-    pclLV->SetVisAttributes(_clrTungsten);
+    outairLV->SetVisAttributes(_grayAir);
 
     return encLV;
 }
 
 G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
 {
+    const char* secondary_air  = "sec_aircyl";
+    const char* secondary_iron = "sec_irontube";
+    const char* secondary_coll = "scl";
+
     // Air volume around secondary collimator
-    auto airTube = new G4Tubs("aircyl", 0.0, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
-    auto airLV   = new G4LogicalVolume(airTube, _Air, "aircyl", 0, 0, 0);
-    airLV->SetVisAttributes(_blueCobalt);
+    auto airTube = new G4Tubs(secondary_air, 0.0, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
+    auto airLV   = new G4LogicalVolume(airTube, _Air, secondary_air, nullptr, nullptr, nullptr);
+    airLV->SetVisAttributes(_grayAir);
     airLV->SetUserLimits(_stepLimit);
 
     // Iron enclosure tube inside
-    auto ironTube = new G4Tubs("irontube", _scl_radius, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
-    auto ironLV   = new G4LogicalVolume(ironTube, _Iron, "irontube", 0, 0, 0);
+    auto ironTube = new G4Tubs(secondary_iron, _scl_radius, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
+    auto ironLV   = new G4LogicalVolume(ironTube, _Iron, secondary_iron, nullptr, nullptr, nullptr);
     new G4PVPlacement(nullptr,                      // no rotation
 		              G4ThreeVector(0.0, 0.0, 0.0), // iron tube has same length, no shift
 		              ironLV,               // its logical volume
-                      "irontube",           // its name
+                      secondary_iron,       // its name
                       airLV,                // its mother volume
                       false,                // no boolean operations
                       0,                    // copy number
@@ -208,17 +272,17 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
     ironLV->SetUserLimits(_stepLimit);
 
     // tungsten secondary collimator
-    auto sclCone = new G4Cons("scl", _scl_holeA, _scl_radius, _scl_holeB, _scl_radius, _scl_halfz, 0.0*deg, 360.0*deg);
-    auto sclLV   = new G4LogicalVolume(sclCone, _Tungsten, "scl", 0, 0, 0);
+    auto sclCone = new G4Cons(secondary_coll, _scl_holeA, _scl_radius, _scl_holeB, _scl_radius, _scl_halfz, 0.0*deg, 360.0*deg);
+    auto sclLV   = new G4LogicalVolume(sclCone, _Tungsten, secondary_coll, nullptr, nullptr, nullptr);
     new G4PVPlacement(0,                           // no rotation
                       G4ThreeVector(0.0, 0.0, -(_coll_halfz - _scl_halfz)), // shifted forward
                       sclLV,                       // its logical volume
-                      "scl",                       // its name
+                      secondary_coll,              // its name
                       airLV,                       // its mother volume
                       false,                       // no boolean operations
                       0,                           // copy number
                       _checkOverlaps);             // checking overlaps
-    sclLV->SetVisAttributes(_clrTungsten);
+    sclLV->SetVisAttributes(_redTungsten);
     sclLV->SetUserLimits(_stepLimit);
 
     return airLV;

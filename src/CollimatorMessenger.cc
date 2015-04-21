@@ -17,11 +17,19 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _enc_radiusCmd{nullptr},
     _enc_halfzCmd{nullptr},
     
+    _sss_radiusCmd{nullptr},
+    _sss_halfzCmd{nullptr},
+
     _opn_radiusCmd{nullptr},
     _opn_halfzCmd{nullptr},
 
     _pcl_radiusCmd{nullptr},
     _pcl_halfzCmd{nullptr},
+    
+    _oair_radiusCmd{nullptr},
+    _oair_halfzCmd{nullptr},
+
+    _sssair_halfzCmd{nullptr},
     
     _air_gapCmd{nullptr},
 
@@ -75,6 +83,20 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _enc_halfzCmd->SetRange("enc_halfz>0.0");
     _enc_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
+    _sss_radiusCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/sss_radius", this);
+    _sss_radiusCmd->SetGuidance("Set stainless steel shell radius");
+    _sss_radiusCmd->SetParameterName("sss_radius",false);
+    _sss_radiusCmd->SetUnitCategory("Length");
+    _sss_radiusCmd->SetRange("sss_radius>0.0");
+    _sss_radiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    
+    _sss_halfzCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/sss_halfz", this);
+    _sss_halfzCmd->SetGuidance("Set stainless steel shell halfz");
+    _sss_halfzCmd->SetParameterName("sss_halfz",false);
+    _sss_halfzCmd->SetUnitCategory("Length");
+    _sss_halfzCmd->SetRange("sss_halfz>0.0");
+    _sss_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
     _opn_radiusCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/opn_radius", this);
     _opn_radiusCmd->SetGuidance("Set opening radius");
     _opn_radiusCmd->SetParameterName("opn_radius",false);
@@ -102,6 +124,27 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _pcl_halfzCmd->SetUnitCategory("Length");
     _pcl_halfzCmd->SetRange("pcl_halfz>0.0");
     _pcl_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    _oair_radiusCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/oair_radius", this);
+    _oair_radiusCmd->SetGuidance("Set primary open air radius");
+    _oair_radiusCmd->SetParameterName("oair_radius",false);
+    _oair_radiusCmd->SetUnitCategory("Length");
+    _oair_radiusCmd->SetRange("oair_radius>0.0");
+    _oair_radiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+    
+    _oair_halfzCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/oair_halfz", this);
+    _oair_halfzCmd->SetGuidance("Set primary open air halfz");
+    _oair_halfzCmd->SetParameterName("oair_halfz",false);
+    _oair_halfzCmd->SetUnitCategory("Length");
+    _oair_halfzCmd->SetRange("oair_halfz>0.0");
+    _oair_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    _sssair_halfzCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/sssair_halfz", this);
+    _sssair_halfzCmd->SetGuidance("Set SS shell open air end halfz");
+    _sssair_halfzCmd->SetParameterName("sssair_halfz",false);
+    _sssair_halfzCmd->SetUnitCategory("Length");
+    _sssair_halfzCmd->SetRange("sssair_halfz>0.0");
+    _sssair_halfzCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
     _air_gapCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/air_gap", this);
     _air_gapCmd->SetGuidance("Set air gap between primary and secondary collimator");
@@ -173,12 +216,20 @@ CollimatorMessenger::~CollimatorMessenger()
     delete _enc_radiusCmd;
     delete _enc_halfzCmd;
     
+    delete _sss_radiusCmd;
+    delete _sss_halfzCmd;
+    
     delete _opn_radiusCmd;
     delete _opn_halfzCmd;
 
     delete _pcl_radiusCmd;
     delete _pcl_halfzCmd;
 
+    delete _oair_radiusCmd;
+    delete _oair_halfzCmd;
+    
+    delete _sssair_halfzCmd;
+    
     delete _air_gapCmd;
 
     delete _coll_radiusCmd;
@@ -233,6 +284,18 @@ void CollimatorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         return;
     }
 
+    if (command == _sss_radiusCmd)
+    {
+        _collimator->set_sss_radius(_sss_radiusCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
+    if (command == _sss_halfzCmd)
+    {
+        _collimator->set_sss_halfz(_sss_halfzCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
     if (command == _opn_radiusCmd)
     {
         _collimator->set_opn_radius(_opn_radiusCmd->GetNewDoubleValue(newValue));
@@ -254,6 +317,24 @@ void CollimatorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     if (command == _pcl_halfzCmd)
     {
         _collimator->set_pcl_halfz(_pcl_halfzCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
+    if (command == _oair_radiusCmd)
+    {
+        _collimator->set_oair_radius(_oair_radiusCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
+    if (command == _oair_halfzCmd)
+    {
+        _collimator->set_oair_halfz(_oair_halfzCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
+    if (command == _sssair_halfzCmd)
+    {
+        _collimator->set_sssair_halfz(_sssair_halfzCmd->GetNewDoubleValue(newValue));
         return;
     }
 

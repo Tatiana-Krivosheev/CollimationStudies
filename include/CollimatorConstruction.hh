@@ -52,16 +52,24 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: double                _enc_radius;  // source enclosure radius
     private: double                _enc_halfz;   // source enclosure half Z
     
+    private: double                _sss_radius;  // source enclosure radius
+    private: double                _sss_halfz;   // source enclosure half Z
+
     private: double                _opn_radius;  // opening radius
     private: double                _opn_halfz;   // opening half Z    
 
     private: double                _pcl_radius;  // primary collimator external radius, internal same as opening
     private: double                _pcl_halfz;   // primary collimator half Z    
 
+    private: double                _oair_radius;  // open air ring radius at the end around SS shell
+    private: double                _oair_halfz;   // open air ring halfz at the end around SS shell
+    
+    private: double                _sssair_halfz;   // SS shell air end halfz
+
     private: double                _air_gap;     // air gap between primary and secondary collimators
 
-    private: double                _coll_radius;
-    private: double                _coll_halfz;
+    private: double                _coll_radius; // scondary collimator enclosure radius
+    private: double                _coll_halfz;  // scondary collimator enclosure halfz
     
     private: double                _scl_radius;
     private: double                _scl_holeA;
@@ -73,8 +81,8 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: G4VisAttributes*      _turqIron;
     private: G4VisAttributes*      _blueCobalt;
     private: G4VisAttributes*      _graySS;
-    private: G4VisAttributes*      _grayAl;
-    private: G4VisAttributes*      _clrTungsten;    
+    private: G4VisAttributes*      _grayAir;
+    private: G4VisAttributes*      _redTungsten;    
     
     private: G4LogicalVolume*      _scoringVolume;
     
@@ -107,6 +115,16 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
         return _enc_halfz;
     }
     
+    public: double sss_radius() const
+    {
+        return _sss_radius;
+    }
+    
+    public: double sss_halfz() const
+    {
+        return _sss_halfz;
+    }
+
     public: double opn_radius() const
     {
         return _opn_radius;
@@ -125,6 +143,21 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     public: double pcl_halfz() const
     {
         return _pcl_halfz;
+    }
+
+    public: double oair_radius() const
+    {
+        return _oair_radius;
+    }
+
+    public: double oair_halfz() const
+    {
+        return _oair_halfz;
+    }
+
+    public: double sssair_halfz() const
+    {
+        return _sssair_halfz;
     }
 
     public: double air_gap() const
@@ -193,6 +226,16 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         _enc_halfz = v;
     }
+    
+    public: void set_sss_radius(double v)
+    {
+        _sss_radius = v;
+    }
+    
+    public: void set_sss_halfz(double v)
+    {
+        _sss_halfz = v;
+    }    
 
     public: void set_opn_radius(double v)
     {
@@ -212,6 +255,21 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     public: void set_pcl_halfz(double v)
     {
         _pcl_halfz = v;
+    }
+
+    public: void set_oair_radius(double v)
+    {
+        _oair_radius = v;
+    }
+
+    public: void set_oair_halfz(double v)
+    {
+        _oair_halfz = v;
+    }
+
+    public: void set_sssair_halfz(double v)
+    {
+        _sssair_halfz = v;
     }
 
     public: void set_air_gap(double v)
