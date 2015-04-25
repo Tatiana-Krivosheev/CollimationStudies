@@ -3,7 +3,7 @@
 /run/verbose 0
 /event/verbose 0
 
-/control/execute C15.in
+/control/execute C25.in
 
 /run/numberOfThreads 1
 
@@ -11,5 +11,5 @@
 
 /control/execute source.in
 
-/run/beamOn 1000000
-
+# NB: number of events! Each event generate 10 photons
+/run/beamOn 100
