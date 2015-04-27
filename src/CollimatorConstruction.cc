@@ -360,14 +360,15 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       0,               // copy number
                       _checkOverlaps); // checking overlaps
                       
-    // build scoring volume as thin (0.1mm) air-filled disk
-    auto scorerTube = new G4Tubs("Scorer", 0.0, 30.0*mm, 0.02*mm, 0.0*deg, 360.0*deg);
+    // build scoring volume as thin (0.04mm) air-filled disk
+    double scorer_halfz = 0.02*mm;
+    auto scorerTube = new G4Tubs("Scorer", 0.0, _coll_radius, scorer_halfz, 0.0*deg, 360.0*deg);
     auto scorerVol  = new G4LogicalVolume(scorerTube,     //its solid
                                           _Air,           //its material
                                          "Scorer");       //its name
                                          
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz + _coll_halfz + 10.0*mm), // secondary collimator center plus collimator half_z plus 10mm
+		              G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz + _coll_halfz + scorer_halfz), // secondary collimator center plus collimator half_z plus scorer halfz
 		              scorerVol,       // its logical volume
                       "Scorer",        // its name
                       logicEnv,        // its mother volume
