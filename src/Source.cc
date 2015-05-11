@@ -22,7 +22,7 @@ Source::Source():
     _particleGun = new G4ParticleGun( 1 );
 
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    G4String particleName = "gamma";
+    G4String particleName = "gamma"; // "geantino"
     _particleGun->SetParticleDefinition(particleTable->FindParticle(particleName));
 
     _particleGun->SetParticlePosition(G4ThreeVector(0., 0., 0.));

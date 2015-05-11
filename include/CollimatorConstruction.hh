@@ -71,10 +71,10 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: double                _coll_radius; // scondary collimator enclosure radius
     private: double                _coll_halfz;  // scondary collimator enclosure halfz
     
-    private: double                _scl_radius;
-    private: double                _scl_holeA;
-    private: double                _scl_holeB;
-    private: double                _scl_halfz;
+    private: double                _scl_radius;  // secondary collimator radius
+    private: double                _scl_holeA;   // upstream opening
+    private: double                _scl_holeB;   // downstram opening
+    private: double                _scl_halfz;   // sec.collimator half Z
   
     private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
     
