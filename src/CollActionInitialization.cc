@@ -1,6 +1,5 @@
 #include "CollActionInitialization.hh"
 
-#include "CollEventAction.hh"
 #include "Source.hh"
 #include "Tally.hh"
 #include "SteppingAction.hh"
@@ -24,5 +23,5 @@ void CollActionInitialization::Build() const
     SetUserAction(new Source());
     SetUserAction(new Tally());
     SetUserAction(new SteppingAction());
-    // SetUserAction(new EventAction);
+    // SetUserAction(new EventAction());
 }  
