@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
     // Choose the Random engine
     G4Random::setTheEngine(new CLHEP::RanecuEngine);
-  
+
     // Construct the default run manager
 #ifdef G4MULTITHREADED
     G4MTRunManager* runManager = new G4MTRunManager;
@@ -42,10 +42,10 @@ int main(int argc, char* argv[])
 
     // Physics list
     runManager->SetUserInitialization(new CollPhysicsList);
-    
+
     // User action initialization
     runManager->SetUserInitialization(new CollActionInitialization());
-  
+
     // Initialize visualization
     //
     G4VisManager* visManager = new G4VisExecutive;
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 
     // Process macro or start UI session
     if ( !ui )
-    { 
+    {
         // batch mode
         G4String command = "/control/execute ";
         G4String fileName = argv[1];
@@ -74,10 +74,9 @@ int main(int argc, char* argv[])
 
     // Job termination
     // Free the store: user actions, physics_list and detector_description are
-    // owned and deleted by the run manager, so they should not be deleted 
+    // owned and deleted by the run manager, so they should not be deleted
     // in the main() program !
-  
+
     delete visManager;
     delete runManager;
 }
-
