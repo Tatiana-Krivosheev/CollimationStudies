@@ -11,7 +11,7 @@
 
 /control/execute source.in
 
-/random/setSeeds 111
+#/random/setSeeds 111 65535
 
 # NB: number of events! Each event generate 10 photons
 /run/beamOn 100
