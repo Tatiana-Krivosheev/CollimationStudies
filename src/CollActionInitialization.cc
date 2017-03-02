@@ -5,7 +5,7 @@
 #include "SteppingAction.hh"
 
 CollActionInitialization::CollActionInitialization():
-    G4VUserActionInitialization()
+    G4VUserActionInitialization{}
 {
 }
 
@@ -24,4 +24,4 @@ void CollActionInitialization::Build() const
     SetUserAction(new Tally());
     SetUserAction(new SteppingAction());
     // SetUserAction(new EventAction());
-}  
+}

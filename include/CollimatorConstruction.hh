@@ -19,11 +19,67 @@ class CollimatorMessenger;
 
 class CollimatorConstruction : public G4VUserDetectorConstruction
 {
+#pragma region Data
+    private: CollimatorMessenger*  _messenger;   // messenger
+
+    private: G4Material*        _Nickel;         // pointer to the source material
+    private: G4Material*        _Tungsten;       // pointer to the collimator material
+    private: G4Material*        _Iron;           // pointer to the shielding material
+    private: G4Material*        _Air;            // pointer to the air
+
+    private: double                _src_radius;  // source radius
+    private: double                _src_halfz;   // source half Z
+    private: double                _src_shiftz;  // source shift Z wrt enclosure
+
+    private: double                _enc_radius;  // source enclosure radius
+    private: double                _enc_halfz;   // source enclosure half Z
+
+    private: double                _sss_radius;  // source enclosure radius
+    private: double                _sss_halfz;   // source enclosure half Z
+
+    private: double                _opn_radius;  // opening radius
+    private: double                _opn_halfz;   // opening half Z
+
+    private: double                _pcl_radius;  // primary collimator external radius, internal same as opening
+    private: double                _pcl_halfz;   // primary collimator half Z
+
+    private: double                _oair_radius;  // open air ring radius at the end around SS shell
+    private: double                _oair_halfz;   // open air ring halfz at the end around SS shell
+
+    private: double                _sssair_halfz;   // SS shell air end halfz
+
+    private: double                _air_gap;     // air gap between primary and secondary collimators
+
+    private: double                _coll_radius; // scondary collimator enclosure radius
+    private: double                _coll_halfz;  // scondary collimator enclosure halfz
+
+    private: double                _scl_radius;  // secondary collimator radius
+    private: double                _scl_holeA;   // upstream opening
+    private: double                _scl_holeB;   // downstram opening
+    private: double                _scl_halfz;   // sec.collimator half Z
+
+    private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
+
+    private: G4VisAttributes*      _turqIron;
+    private: G4VisAttributes*      _blueCobalt;
+    private: G4VisAttributes*      _graySS;
+    private: G4VisAttributes*      _grayAir;
+    private: G4VisAttributes*      _redTungsten;
+
+    private: G4LogicalVolume*      _scoringVolume;
+
+    private: G4UserLimits*         _stepLimit;            // pointer to user step limits
+#pragma endregion
+
+#pragma region Ctor/Dtor
     public:          CollimatorConstruction();
     public: virtual ~CollimatorConstruction();
+#pragma endregion
 
+#pragma region Ctor/Dtor
     public: virtual G4VPhysicalVolume* Construct() override;
-    
+#pragma endregion
+
     public: G4LogicalVolume* GetScoringVolume() const
     {
         return _scoringVolume;
@@ -33,62 +89,10 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: void DefineMaterials();
     private: void DefineColors();
     private: G4VPhysicalVolume* DefineVolumes();
-    
+
     private: G4LogicalVolume* BuildPrimaryCollimator();
     private: G4LogicalVolume* BuildSecondaryCollimator();
-  
-#pragma region Data
-    private: G4Material*        _Nickel;         // pointer to the source material
-    private: G4Material*        _Tungsten;       // pointer to the collimator material
-    private: G4Material*        _Iron;           // pointer to the shielding material
-    private: G4Material*        _Air;            // pointer to the air
 
-    private: CollimatorMessenger*  _messenger;   // messenger
-
-    private: double                _src_radius;  // source radius
-    private: double                _src_halfz;   // source half Z
-    private: double                _src_shiftz;  // source shift Z wrt enclosure
-    
-    private: double                _enc_radius;  // source enclosure radius
-    private: double                _enc_halfz;   // source enclosure half Z
-    
-    private: double                _sss_radius;  // source enclosure radius
-    private: double                _sss_halfz;   // source enclosure half Z
-
-    private: double                _opn_radius;  // opening radius
-    private: double                _opn_halfz;   // opening half Z    
-
-    private: double                _pcl_radius;  // primary collimator external radius, internal same as opening
-    private: double                _pcl_halfz;   // primary collimator half Z    
-
-    private: double                _oair_radius;  // open air ring radius at the end around SS shell
-    private: double                _oair_halfz;   // open air ring halfz at the end around SS shell
-    
-    private: double                _sssair_halfz;   // SS shell air end halfz
-
-    private: double                _air_gap;     // air gap between primary and secondary collimators
-
-    private: double                _coll_radius; // scondary collimator enclosure radius
-    private: double                _coll_halfz;  // scondary collimator enclosure halfz
-    
-    private: double                _scl_radius;  // secondary collimator radius
-    private: double                _scl_holeA;   // upstream opening
-    private: double                _scl_holeB;   // downstram opening
-    private: double                _scl_halfz;   // sec.collimator half Z
-  
-    private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
-    
-    private: G4VisAttributes*      _turqIron;
-    private: G4VisAttributes*      _blueCobalt;
-    private: G4VisAttributes*      _graySS;
-    private: G4VisAttributes*      _grayAir;
-    private: G4VisAttributes*      _redTungsten;    
-    
-    private: G4LogicalVolume*      _scoringVolume;
-    
-    private: G4UserLimits*         _stepLimit;            // pointer to user step limits
-#pragma endregion
-  
 #pragma region Observers
     public: double src_radius() const
     {
@@ -99,7 +103,7 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         return _src_halfz;
     }
-  
+
     public: double src_shiftz() const
     {
         return _src_shiftz;
@@ -109,17 +113,17 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         return _enc_radius;
     }
-    
+
     public: double enc_halfz() const
     {
         return _enc_halfz;
     }
-    
+
     public: double sss_radius() const
     {
         return _sss_radius;
     }
-    
+
     public: double sss_halfz() const
     {
         return _sss_halfz;
@@ -134,7 +138,7 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         return _opn_halfz;
     }
-  
+
     public: double pcl_radius() const
     {
         return _pcl_radius;
@@ -174,12 +178,12 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         return _coll_halfz;
     }
-    
+
     public: double scl_radius() const
     {
         return _scl_radius;
     }
-    
+
     public: double scl_holeA() const
     {
         return _scl_holeA;
@@ -211,7 +215,7 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         _src_halfz = v;
     }
-  
+
     public: void set_src_shiftz(double v)
     {
         _src_shiftz = v;
@@ -221,21 +225,21 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         _enc_radius = v;
     }
-    
+
     public: void set_enc_halfz(double v)
     {
         _enc_halfz = v;
     }
-    
+
     public: void set_sss_radius(double v)
     {
         _sss_radius = v;
     }
-    
+
     public: void set_sss_halfz(double v)
     {
         _sss_halfz = v;
-    }    
+    }
 
     public: void set_opn_radius(double v)
     {
@@ -246,7 +250,7 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         _opn_halfz = v;
     }
-  
+
     public: void set_pcl_radius(double v)
     {
         _pcl_radius = v;
@@ -285,13 +289,13 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     public: void set_coll_halfz(double v)
     {
         _coll_halfz = v;
-    }  
-    
+    }
+
     public: void set_scl_radius(double v)
     {
         _scl_radius = v;
     }
-    
+
     public: void set_scl_holeA(double v)
     {
         _scl_holeA = v;
@@ -311,8 +315,7 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     {
         _checkOverlaps = v;
     }
-    
+
     public: void set_maxStep(double step);
 #pragma endregion
 };
-

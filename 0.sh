@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd $1
-make -j4
+cmake --build . -- -j4

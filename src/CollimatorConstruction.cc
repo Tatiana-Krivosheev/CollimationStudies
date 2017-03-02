@@ -30,7 +30,8 @@
 #include "G4SystemOfUnits.hh"
 
 CollimatorConstruction::CollimatorConstruction():
-    G4VUserDetectorConstruction(),
+    G4VUserDetectorConstruction{},
+
     _Nickel{nullptr},
     _Tungsten{nullptr},
     _Iron{nullptr},
@@ -42,7 +43,7 @@ CollimatorConstruction::CollimatorConstruction():
 
     _enc_radius{-1.0},
     _enc_halfz{-1.0},
-    
+
     _sss_radius{-1.0},
     _sss_halfz{-1.0},
 
@@ -54,9 +55,9 @@ CollimatorConstruction::CollimatorConstruction():
 
     _oair_radius{-1.0},
     _oair_halfz{-1.0},
-    
+
     _sssair_halfz{-1.0},
-    
+
     _air_gap{-1.0},
 
     _coll_radius{-1.0},
@@ -74,7 +75,7 @@ CollimatorConstruction::CollimatorConstruction():
     _graySS{nullptr},
     _grayAir{nullptr},
     _redTungsten{nullptr},
-    
+
     _scoringVolume{nullptr},
     _stepLimit{nullptr}
 {
@@ -153,12 +154,12 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     auto encTube = new G4Tubs(primary_enclosure, 0.0, _enc_radius, _enc_halfz, 0.0*deg, 360.0*deg);
     auto encLV   = new G4LogicalVolume(encTube, _Tungsten, primary_enclosure, nullptr, nullptr, nullptr);
     encLV->SetVisAttributes(_redTungsten);
-    
+
     // Stainless steel shell
     auto sssTube = new G4Tubs(primary_sss, 0.0, _sss_radius, _sss_halfz, 0.0*deg, 360.0*deg);
     auto sssLV   = new G4LogicalVolume(sssTube, _Iron, primary_sss, nullptr, nullptr, nullptr);
     sssLV->SetUserLimits(_stepLimit);
-    
+
     new G4PVPlacement(nullptr,                              // no rotation
 		              G4ThreeVector(0.0, 0.0, _enc_halfz - _sss_halfz), // at the end of the enclosure
 		              sssLV,           // its logical volume
@@ -188,7 +189,7 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     auto opnTube = new G4Tubs(primary_opening, 0.0, _opn_radius, _opn_halfz, 0.0*deg, 360.0*deg);
     auto opnLV   = new G4LogicalVolume(opnTube, _Air, primary_opening, nullptr, nullptr, nullptr);
     opnLV->SetUserLimits(_stepLimit);
-   
+
     new G4PVPlacement(nullptr,                             // no rotation
 		              G4ThreeVector(0.0, 0.0, _sss_halfz - _opn_halfz), // opening at the end of the SS shell
 		              opnLV,           // its logical volume
@@ -213,7 +214,7 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
                       0,               // copy number
                       _checkOverlaps); // checking overlaps
     pclLV->SetVisAttributes(_redTungsten);
-    
+
     // SS shell end air ring
     auto sssairTube = new G4Tubs(primary_sssair, _opn_radius, _sss_radius, _sssair_halfz, 0.0*deg, 360.0*deg);
     auto sssairLV   = new G4LogicalVolume(sssairTube, _Air, primary_sssair, nullptr, nullptr, nullptr);
@@ -300,7 +301,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
     std::cout << "Computed tolerance = "
               << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
               << " mm" << G4endl;
-              
+
     double maxStep = 0.01*mm;
     _stepLimit = new G4UserLimits(maxStep);
 
@@ -328,7 +329,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                                         _Air,             //its material
                                        "Envelope");       //its name
     logicEnv->SetUserLimits(_stepLimit);
-                                       
+
 
     new G4PVPlacement(0,                       //no rotation
                       G4ThreeVector(),         //at (0,0,0)
@@ -359,14 +360,14 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       false,           // no boolean operations
                       0,               // copy number
                       _checkOverlaps); // checking overlaps
-                      
+
     // build scoring volume as thin (0.04mm) air-filled disk
     double scorer_halfz = 0.02*mm;
     auto scorerTube = new G4Tubs("Scorer", 0.0, _coll_radius, scorer_halfz, 0.0*deg, 360.0*deg);
     auto scorerVol  = new G4LogicalVolume(scorerTube,     //its solid
                                           _Air,           //its material
                                          "Scorer");       //its name
-                                         
+
     new G4PVPlacement(nullptr,                             // no rotation
 		              G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz + _coll_halfz + scorer_halfz), // secondary collimator center plus collimator half_z plus scorer halfz
 		              scorerVol,       // its logical volume
@@ -374,11 +375,11 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                       logicEnv,        // its mother volume
                       false,           // no boolean operations
                       0,               // copy number
-                      _checkOverlaps); // checking overlaps    
-                    
+                      _checkOverlaps); // checking overlaps
+
     _scoringVolume = scorerVol;
     _scoringVolume->SetVisAttributes(_blueCobalt);
-    
+
     // Always return the physical world
     return worldPV;
 }

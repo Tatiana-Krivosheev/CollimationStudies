@@ -11,8 +11,8 @@
 #include "G4LogicalVolume.hh"
 
 SteppingAction::SteppingAction(G4LogicalVolume* scoringVolume):
-    G4UserSteppingAction(),
-    _scoringVolume(scoringVolume)
+    G4UserSteppingAction{},
+    _scoringVolume{scoringVolume}
 {
 }
 
@@ -29,7 +29,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     static const char* POSITRON = "PPP: ";
 
     if (_scoringVolume == nullptr)
-    { 
+    {
         const CollimatorConstruction* coll = static_cast<const CollimatorConstruction*>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
         _scoringVolume = coll->GetScoringVolume();
 
@@ -41,32 +41,31 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     // get volume of the current step
     G4LogicalVolume* volume = pt->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
-      
+
     if (volume == nullptr)
         return;
-    
+
     // check if we are in scoring volume
     if (volume != _scoringVolume)
         return;
-    
-    // get all particle coordinates    
+
+    // get all particle coordinates
     auto pos = pt->GetPosition();
     auto dir = pt->GetMomentumDirection();
     auto ekn = pt->GetKineticEnergy();
     auto wgt = pt->GetWeight();
-    
+
     auto chg = pt->GetCharge();
-    
+
     const char* tag = PHOTON;
     if (chg != 0.0)
     {
-        tag = ELECTRON;
-        if (chg > 0.0)
-            tag = POSITRON;
+        tag = (chg > 0.0) ? POSITRON : ELECTRON;
     }
-    
+
     mtx.lock();
 
+    // potential output to stringstream first?
     std::cout << tag
               << std::scientific << std::setw(15) << std::setprecision(4) << wgt
               << std::scientific << std::setw(15) << std::setprecision(4) << ekn
@@ -76,7 +75,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.x()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.y()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.z() << std::endl;
-              
+
     mtx.unlock();
 }
-
