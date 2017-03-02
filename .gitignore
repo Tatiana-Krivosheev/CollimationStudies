@@ -32,3 +32,6 @@
 
 # SVN
 .svn/
+
+# Run
+run/
