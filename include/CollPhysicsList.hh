@@ -24,7 +24,7 @@ class CollPhysicsList: public G4VModularPhysicsList
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
-    public: CollPhysicsList(double cuts = 0.1*mm);
+    public: CollPhysicsList(double cuts = 0.01*mm);
 
     public: CollPhysicsList& operator=(const CollPhysicsList&) = delete;
     public: CollPhysicsList(const CollPhysicsList&) = delete;

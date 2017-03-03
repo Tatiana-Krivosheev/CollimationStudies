@@ -2,16 +2,16 @@
 # when running in interactive mode with visualization
 #
 # Set some default verbose
-#
+
 /control/verbose 2
 /control/saveHistory
 /run/verbose 2
 
-/control/execute C15.in
+/control/execute GP2/C15.in
 
 /run/initialize
 
-/control/execute source.in
-#
+/control/execute GP2/source.in
+
 # Visualization setting
 /control/execute vis.mac

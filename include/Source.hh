@@ -50,8 +50,8 @@ class Source : public G4VUserPrimaryGeneratorAction
 #pragma endregion
 
 #pragma region Helpers
-    public: static troika sample_direction();
-    public: static double sample_energy();
+    private: static troika sample_direction();
+    private: static double sample_energy();
 #pragma endregion
 
 #pragma region Overrides
