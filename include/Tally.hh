@@ -1,8 +1,4 @@
-// -*- C++ -*-
-
 #pragma once
-
-#include <iosfwd>
 
 #include "globals.hh"
 #include "G4UserRunAction.hh"
@@ -20,10 +16,10 @@ class Tally : public G4UserRunAction
 #pragma endregion
 
 #pragma region Overrides
-    public: virtual void BeginOfRunAction(const G4Run*);
-    public: virtual void EndOfRunAction(const G4Run*);
+    public: virtual void BeginOfRunAction(const G4Run*) override;
+    public: virtual void EndOfRunAction(const G4Run*) override;
 #pragma endregion
-    
+
 #pragma region Observers
 #pragma endregion
 

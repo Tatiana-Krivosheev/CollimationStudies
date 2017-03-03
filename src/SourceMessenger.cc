@@ -20,7 +20,7 @@ SourceMessenger::SourceMessenger(Source* source):
     _radiusCmd->SetUnitCategory("Length");
     _radiusCmd->SetRange("radius>0.0");
     _radiusCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
-    
+
     _halfzCmd = new G4UIcmdWithADoubleAndUnit("/GP/source/halfz", this);
     _halfzCmd->SetGuidance("Set source halfz");
     _halfzCmd->SetParameterName("halfz",false);
@@ -31,26 +31,26 @@ SourceMessenger::SourceMessenger(Source* source):
 
 SourceMessenger::~SourceMessenger()
 {
-	delete _radiusCmd;
-	delete _halfzCmd;
-	
-	delete _srcDirectory;
+    delete _radiusCmd;
+    delete _halfzCmd;
+
+    delete _srcDirectory;
 }
 
-void SourceMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue)
+void SourceMessenger::SetNewValue(G4UIcommand* cmd, G4String value)
 {
-	if (cmd == _radiusCmd)
-	{
-		_source->set_radius(_radiusCmd->GetNewDoubleValue(newValue));
-		return;
-	}
+    if (cmd == _radiusCmd)
+    {
+        _source->set_radius(_radiusCmd->GetNewDoubleValue(value));
+        return;
+    }
 
-	if (cmd == _halfzCmd)
-	{
-		_source->set_halfz(_halfzCmd->GetNewDoubleValue(newValue));
-		return;
-	}
-	
-	return;
+    if (cmd == _halfzCmd)
+    {
+        _source->set_halfz(_halfzCmd->GetNewDoubleValue(value));
+        return;
+    }
+
+    return;
 }
 

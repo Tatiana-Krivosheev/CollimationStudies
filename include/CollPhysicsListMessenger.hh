@@ -6,12 +6,8 @@
 class CollPhysicsList;
 
 class G4UIdirectory;
-class G4UIcmdWithoutParameter;
-class G4UIcmdWithADouble;
 class G4UIcmdWithADoubleAndUnit;
-class G4UIcmdWithABool;
 class G4UIcmdWithAString;
-class G4UIcmdWithAInt;
 
 class CollPhysicsListMessenger: public G4UImessenger
 {
@@ -33,6 +29,6 @@ class CollPhysicsListMessenger: public G4UImessenger
 #pragma endregion
 
 #pragma region Overrides
-    public: void SetNewValue(G4UIcommand*, G4string) override;
+    public: virtual void SetNewValue(G4UIcommand*, G4String) override;
 #pragma endregion
 };

@@ -16,7 +16,7 @@ class Source : public G4VUserPrimaryGeneratorAction
     public: constexpr static double E_hi = 1.33*MeV;
 
     public: constexpr static double P_lo = 0.5;
-    public: constexpr static double P_hi = 0.5;
+    public: constexpr static double P_hi = 1.0 - P_lo;
 
 #pragma region Data
     private: G4ParticleGun*             _particleGun;
@@ -29,7 +29,7 @@ class Source : public G4VUserPrimaryGeneratorAction
 
 #pragma region Ctor/Dtor/ops
     public: Source();
-    public: ~Source();
+    public: virtual ~Source();
 #pragma endregion
 
 #pragma region Observers
@@ -49,12 +49,16 @@ class Source : public G4VUserPrimaryGeneratorAction
     }
 #pragma endregion
 
+#pragma region Helpers
     public: static troika sample_direction();
     public: static double sample_energy();
+#pragma endregion
+
+#pragma region Overrides
+    public: virtual void GeneratePrimaries(G4Event* anEvent) override;
+#pragma endregion
 
 #pragma region Mutators
-    public: void GeneratePrimaries(G4Event* anEvent);
-
     public: void set_radius(double val)
     {
         _radius = val;

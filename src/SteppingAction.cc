@@ -32,8 +32,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     {
         const CollimatorConstruction* coll = static_cast<const CollimatorConstruction*>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
         _scoringVolume = coll->GetScoringVolume();
-
-        // std::cout << "Scoring volume assigned: " << (void*)_scoringVolume << std::endl;
     }
 
     // get step start point
