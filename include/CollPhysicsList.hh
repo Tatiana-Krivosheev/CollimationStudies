@@ -14,7 +14,7 @@ class CollPhysicsList: public G4VModularPhysicsList
     private: double _cutForElectron;
     private: double _cutForPositron;
 
-    private: G4String                _emName;
+    private: std::string             _emName;
 
     private: G4VPhysicsConstructor*  _emPhysicsList;
     private: G4VPhysicsConstructor*  _decayPhysicsList;
@@ -24,7 +24,12 @@ class CollPhysicsList: public G4VModularPhysicsList
 #pragma endregion
 
 #pragma region Ctor/Dtor/ops
-    public: CollPhysicsList(double cuts = 0.2*mm);
+    public: CollPhysicsList(double cuts = 0.1*mm);
+
+    public: CollPhysicsList& operator=(const CollPhysicsList&) = delete;
+    public: CollPhysicsList(const CollPhysicsList&) = delete;
+    public: CollPhysicsList(CollPhysicsList&&) = delete;
+
     public: virtual ~CollPhysicsList();
 #pragma endregion
 
@@ -40,7 +45,6 @@ class CollPhysicsList: public G4VModularPhysicsList
     public: void SetCutForElectron(double cut);
     public: void SetCutForPositron(double cut);
 
-    public: void AddPhysicsList(const G4String& name);  
-    public: void AddPackage(const G4String& pack);
+    public: void AddPhysicsList(const std::string& name);
 #pragma endregion
 };

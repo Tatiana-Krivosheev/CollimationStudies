@@ -1,40 +1,46 @@
+#include "CollPhysicsList.hh"
+#include "CollPhysicsListMessenger.hh"
+
 #include "G4RunManager.hh"
-#include "globals.hh"
-#include "G4ProcessManager.hh"
-#include "G4Region.hh"
-#include "G4RegionStore.hh"
+
+#include "G4PhysicalConstants.hh"
 
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTypes.hh"
 #include "G4ParticleTable.hh"
+#include "G4UnitsTable.hh"
+
+#include "G4DecayPhysics.hh"
+#include "G4EmExtraPhysics.hh"
+#include "G4EmLivermorePhysics.hh"
+#include "G4EmLowEPPhysics.hh"
+#include "G4EmPenelopePhysics.hh"
+#include "G4EmStandardPhysics.hh"
+#include "G4EmStandardPhysics_option1.hh"
+#include "G4EmStandardPhysics_option2.hh"
+#include "G4EmStandardPhysics_option3.hh"
+#include "G4StoppingPhysics.hh"
+
+#include "G4EmProcessOptions.hh"
+#include "G4LossTableManager.hh"
 
 #include "G4PhysListFactory.hh"
-#include "CollPhysicsList.hh"
-#include "CollPhysicsListMessenger.hh"
-#include "G4SystemOfUnits.hh"
-
-// Physic lists (contained inside the Geant4 source code, in the 'physicslists folder')
-#include "G4EmStandardPhysics_option3.hh"
-#include "G4EmLivermorePhysics.hh"
-#include "G4EmPenelopePhysics.hh"
-#include "G4EmExtraPhysics.hh"
 
 #include "G4DecayPhysics.hh"
 #include "G4RadioactiveDecayPhysics.hh"
 
-#include "G4LossTableManager.hh"
-
-
 CollPhysicsList::CollPhysicsList(double cuts):
-    G4VModularPhysicsList(),
-    _emPhysicsList(nullptr),
-    _decayPhysicsList(nullptr)
+    G4VModularPhysicsList{},
+    _emPhysicsList{nullptr},
+    _decayPhysicsList{nullptr},
+    _emExtraPhysicsList{nullptr},
+    _messenger{nullptr}
 {
     G4LossTableManager::Instance();
 
     defaultCutValue = cuts;
 
-    std::cout << "Cut set to:" << G4BestUnit(cuts,"Length") << std::endl;
+    std::cout << "Cut set to:" << G4BestUnit(cuts, "Length") << std::endl;
 
     _cutForGamma     = defaultCutValue;
     _cutForElectron  = defaultCutValue;
@@ -46,15 +52,15 @@ CollPhysicsList::CollPhysicsList(double cuts):
     SetVerboseLevel(ver);
 
     // EM physics
-    _emPhysicsList = new G4EmStandardPhysics_option3(ver);
-    _emName = G4String("standard_opt3");
+    _emPhysicsList = new G4EmLowEPPhysics(ver);
+    _emName = std::string("emlowenergy");
 
     // Decay physics and all particles
     _decayPhysicsList = new G4DecayPhysics(ver);
 }
 
 CollPhysicsList::~CollPhysicsList()
-{ 
+{
     delete _messenger;
 
     delete _emPhysicsList;
@@ -75,10 +81,10 @@ void CollPhysicsList::ConstructProcess()
     _decayPhysicsList->ConstructProcess();
 }
 
-void CollPhysicsList::AddPhysicsList(const G4String& name)
+void CollPhysicsList::AddPhysicsList(const std::string& name)
 {
     if (verboseLevel>1)
-	   G4cout << "PhysicsList::AddPhysicsList: <" << name << ">" << G4endl;
+       std::cout << "PhysicsList::AddPhysicsList: <" << name << ">" << std::endl;
 
     if (name == _emName)
         return;
@@ -88,38 +94,58 @@ void CollPhysicsList::AddPhysicsList(const G4String& name)
     /////////////////////////////////////////////////////////////////////////////
     if (name == "standard_opt3")
     {
-	   _emName = name;
-	   delete _emPhysicsList;
-	   _emPhysicsList = new G4EmStandardPhysics_option3();
-	   G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-	   G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmStandardPhysics_option3" << G4endl;
+       _emName = name;
+       delete _emPhysicsList;
+       _emPhysicsList = new G4EmStandardPhysics_option3();
+       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmStandardPhysics_option3" << G4endl;
+        _emPhysicsList->ConstructProcess();
+       goto end;
     }
-    else if (name == "LowE_Livermore")
+
+    if (name == "emlowenergy")
     {
-	   _emName = name;
-	   delete _emPhysicsList;
-	   _emPhysicsList = new G4EmLivermorePhysics();
-	   G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-	   G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << G4endl;
+       _emName = name;
+       delete _emPhysicsList;
+       _emPhysicsList = new G4EmLowEPPhysics();
+       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLowEPPPhysics" << G4endl;
+        _emPhysicsList->ConstructProcess();
+        goto end;
     }
-    else if (name == "LowE_Penelope")
+
+    if (name == "LowE_Livermore")
     {
-	   _emName = name;
-	   delete _emPhysicsList;
-	   _emPhysicsList = new G4EmPenelopePhysics();
-	   G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-	   G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << G4endl;
-    } 
-    else
-    {
-	   G4cout << "PhysicsList::AddPhysicsList: <" << name << ">"
-	          << " is not defined"
-	          << G4endl;
+       _emName = name;
+       delete _emPhysicsList;
+       _emPhysicsList = new G4EmLivermorePhysics();
+       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << G4endl;
+        _emPhysicsList->ConstructProcess();
+        goto end;
     }
+
+    if (name == "LowE_Penelope")
+    {
+       _emName = name;
+       delete _emPhysicsList;
+       _emPhysicsList = new G4EmPenelopePhysics();
+       G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << G4endl;
+        _emPhysicsList->ConstructProcess();
+        goto end;
+    }
+
+   G4cout << "PhysicsList::AddPhysicsList: <" << name << ">"
+          << " is not defined"
+          << G4endl;
+
+    end:
+    return;
 }
 
 void CollPhysicsList::SetCuts()
-{  
+{
     if (verboseLevel > 0)
     {
         G4cout << "PhysicsList::SetCuts:";
