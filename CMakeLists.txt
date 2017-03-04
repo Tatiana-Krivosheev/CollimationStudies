@@ -44,19 +44,45 @@ target_link_libraries(col ${Geant4_LIBRARIES})
 # build B1. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
+
+set(GP2_SCRIPTS
+  GP2/C15.in
+  GP2/C25.in
+  GP2/Src.in
+  GP2/source.in
+)
+
+set(GP3_SCRIPTS
+  GP3/C15.in
+  GP3/C25.in
+  GP3/Src.in
+  GP3/source.in
+)
+
 set(ALL_SCRIPTS
-  batch.mac
-  init.mac
+  batchGP2.mac
+  batchGP3.mac
   init_vis.mac
   vis.mac
-  startup.mac
-  C15.in
-  C25.in
-  Src.in
-  source.in
   )
 
 foreach(_script ${ALL_SCRIPTS})
+  configure_file(
+    ${PROJECT_SOURCE_DIR}/${_script}
+    ${PROJECT_BINARY_DIR}/${_script}
+    COPYONLY
+    )
+endforeach()
+
+foreach(_script ${GP2_SCRIPTS})
+  configure_file(
+    ${PROJECT_SOURCE_DIR}/${_script}
+    ${PROJECT_BINARY_DIR}/${_script}
+    COPYONLY
+    )
+endforeach()
+
+foreach(_script ${GP3_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}

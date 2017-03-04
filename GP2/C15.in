@@ -1,4 +1,5 @@
-/control/execute Src.in
+/control/execute GP2/Src.in
+
 /GP/det/air_gap 2.2 mm
 /GP/det/coll_radius 25.0 mm
 /GP/det/coll_halfz 89.27 mm
