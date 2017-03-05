@@ -19,7 +19,7 @@
 
 int main(int argc, char* argv[])
 {
-    CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
+    // CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
 
     G4UIExecutive* ui = nullptr;
 

@@ -12,7 +12,7 @@
 CollPhysicsListMessenger::CollPhysicsListMessenger(CollPhysicsList* physList):
     _physicsList{physList}
 {
-    _listDir = new G4UIdirectory("/GP/physics");
+    _listDir = new G4UIdirectory("/GP/physics/");
 
     // Building modular PhysicsList
 

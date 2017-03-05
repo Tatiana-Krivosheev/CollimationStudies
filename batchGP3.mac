@@ -3,7 +3,7 @@
 /run/verbose 0
 /event/verbose 0
 
-/control/execute GP2/C25.in
+/control/execute GP3/C25.in
 
 /run/numberOfThreads 1
 
@@ -11,9 +11,9 @@
 
 /run/setCut       0.01 mm
 
-/control/execute GP2/source.in
+/control/execute GP3/source.in
 
-#/random/setSeeds 123 123
+/random/setSeeds 111 111
 
 # NB: number of events! Each event generate 10 photons
-/run/beamOn 100
+/run/beamOn 10000
