@@ -114,7 +114,7 @@ void CollimatorConstruction::DefineMaterials()
     _Nickel = nistManager->FindOrBuildMaterial("G4_Ni");
 
     // Print materials
-    std::cout << *(G4Material::GetMaterialTable()) << G4endl;
+    std::cout << *(G4Material::GetMaterialTable()) << std::endl;
 }
 
 void CollimatorConstruction::DefineColors()
@@ -161,8 +161,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     sssLV->SetUserLimits(_stepLimit);
 
     new G4PVPlacement(nullptr,                              // no rotation
-		              G4ThreeVector(0.0, 0.0, _enc_halfz - _sss_halfz), // at the end of the enclosure
-		              sssLV,           // its logical volume
+                      G4ThreeVector(0.0, 0.0, _enc_halfz - _sss_halfz), // at the end of the enclosure
+                      sssLV,           // its logical volume
                       primary_sss,     // its name
                       encLV,           // its mother volume
                       false,           // no boolean operations
@@ -176,8 +176,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     sourceLV->SetUserLimits(_stepLimit);
 
     new G4PVPlacement(nullptr,                              // no rotation
-		              G4ThreeVector(0.0, 0.0, _src_shiftz - (_enc_halfz - _sss_halfz)), // at (0,0,shiftz) relative to enclosure
-		              sourceLV,        // its logical volume
+                      G4ThreeVector(0.0, 0.0, _src_shiftz - (_enc_halfz - _sss_halfz)), // at (0,0,shiftz) relative to enclosure
+                      sourceLV,        // its logical volume
                       primary_source,  // its name
                       sssLV,           // its mother volume
                       false,           // no boolean operations
@@ -191,8 +191,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     opnLV->SetUserLimits(_stepLimit);
 
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, _sss_halfz - _opn_halfz), // opening at the end of the SS shell
-		              opnLV,           // its logical volume
+                      G4ThreeVector(0.0, 0.0, _sss_halfz - _opn_halfz), // opening at the end of the SS shell
+                      opnLV,           // its logical volume
                       primary_opening, // its name
                       sssLV,           // its mother volume
                       false,           // no boolean operations
@@ -206,8 +206,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     pclLV->SetUserLimits(_stepLimit);
 
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, _sss_halfz - _pcl_halfz - 2.0*(_opn_halfz - _pcl_halfz)), // primary collimator starts at the same as opening position
-		              pclLV,           // its logical volume
+                      G4ThreeVector(0.0, 0.0, _sss_halfz - _pcl_halfz - 2.0*(_opn_halfz - _pcl_halfz)), // primary collimator starts at the same as opening position
+                      pclLV,           // its logical volume
                       primary_collimator,  // its name
                       sssLV,           // its mother volume
                       false,           // no boolean operations
@@ -220,8 +220,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     auto sssairLV   = new G4LogicalVolume(sssairTube, _Air, primary_sssair, nullptr, nullptr, nullptr);
 
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, _sss_halfz - _sssair_halfz), // SS shell air end starts at the end of enclosure
-		              sssairLV,        // its logical volume
+                      G4ThreeVector(0.0, 0.0, _sss_halfz - _sssair_halfz), // SS shell air end starts at the end of enclosure
+                      sssairLV,        // its logical volume
                       primary_sssair,  // its name
                       sssLV,           // its mother volume
                       false,           // no boolean operations
@@ -234,8 +234,8 @@ G4LogicalVolume* CollimatorConstruction::BuildPrimaryCollimator()
     auto outairLV   = new G4LogicalVolume(outairTube, _Air, primary_outair, nullptr, nullptr, nullptr);
 
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, _enc_halfz - _oair_halfz), // open air starts at the end of enclosure
-		              outairLV,        // its logical volume
+                      G4ThreeVector(0.0, 0.0, _enc_halfz - _oair_halfz), // open air starts at the end of enclosure
+                      outairLV,        // its logical volume
                       primary_outair,  // its name
                       encLV,           // its mother volume
                       false,           // no boolean operations
@@ -262,8 +262,8 @@ G4LogicalVolume* CollimatorConstruction::BuildSecondaryCollimator()
     auto ironTube = new G4Tubs(secondary_iron, _scl_radius, _coll_radius, _coll_halfz, 0.0*deg, 360.0*deg);
     auto ironLV   = new G4LogicalVolume(ironTube, _Iron, secondary_iron, nullptr, nullptr, nullptr);
     new G4PVPlacement(nullptr,                      // no rotation
-		              G4ThreeVector(0.0, 0.0, 0.0), // iron tube has same length, no shift
-		              ironLV,               // its logical volume
+                      G4ThreeVector(0.0, 0.0, 0.0), // iron tube has same length, no shift
+                      ironLV,               // its logical volume
                       secondary_iron,       // its name
                       airLV,                // its mother volume
                       false,                // no boolean operations
@@ -343,8 +343,8 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
     auto priColl = BuildPrimaryCollimator();
 
     new G4PVPlacement(nullptr,                               // no rotation
-		              G4ThreeVector(0.0, 0.0, -_src_shiftz), // position primary collimator such that center is at source
-		              priColl,         // its logical volume
+                      G4ThreeVector(0.0, 0.0, -_src_shiftz), // position primary collimator such that center is at source
+                      priColl,         // its logical volume
                       "PCL",           // its name
                       logicEnv,        // its mother volume
                       false,           // no boolean operations
@@ -353,8 +353,8 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
 
     auto secColl = BuildSecondaryCollimator();
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz), // secondary collimator after primary with air gap in between
-		              secColl,         // its logical volume
+                      G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz), // secondary collimator after primary with air gap in between
+                      secColl,         // its logical volume
                       "SCL",           // its name
                       logicEnv,        // its mother volume
                       false,           // no boolean operations
@@ -369,8 +369,8 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
                                          "Scorer");       //its name
 
     new G4PVPlacement(nullptr,                             // no rotation
-		              G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz + _coll_halfz + scorer_halfz), // secondary collimator center plus collimator half_z plus scorer halfz
-		              scorerVol,       // its logical volume
+                      G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz + _coll_halfz + scorer_halfz), // secondary collimator center plus collimator half_z plus scorer halfz
+                      scorerVol,       // its logical volume
                       "Scorer",        // its name
                       logicEnv,        // its mother volume
                       false,           // no boolean operations
@@ -391,4 +391,3 @@ void CollimatorConstruction::set_maxStep(double maxStep)
         _stepLimit->SetMaxAllowedStep(maxStep);
     }
 }
-
