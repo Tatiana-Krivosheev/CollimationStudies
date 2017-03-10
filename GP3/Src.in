@@ -6,10 +6,9 @@
 /GP/det/sss_radius 7.0 mm
 /GP/det/sss_halfz 19.25 mm
 /GP/det/opn_radius 2.5 mm
-/GP/det/opn_halfz  6.0 mm
+/GP/det/opn_halfz  4.6 mm
 /GP/det/pcl_radius 4.9 mm
 /GP/det/pcl_halfz  4.25 mm
 /GP/det/oair_radius 11.0 mm
 /GP/det/oair_halfz  4.0 mm
-/GP/det/sssair_halfz 0.75 mm
-
+/GP/det/sssair_halfz 1.35 mm

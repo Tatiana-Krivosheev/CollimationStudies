@@ -1,9 +1,9 @@
 /control/execute GP3/Src.in
 
-/GP/det/air_gap 2.2 mm
+/GP/det/air_gap 2.7 mm
 /GP/det/coll_radius 25.0 mm
 /GP/det/coll_halfz 89.27 mm
-/GP/det/scl_radius 10.9 mm
+/GP/det/scl_radius 12.5 mm
 /GP/det/scl_halfz 82.5 mm
-/GP/det/scl_holeA 2.133 mm
-/GP/det/scl_holeB 6.891 mm
+/GP/det/scl_holeA 2.45 mm
+/GP/det/scl_holeB 7.07 mm
