@@ -1,14 +1,19 @@
 /GP/det/enc_radius 25.0 mm
 /GP/det/enc_halfz  58.75 mm
+
 /GP/det/src_radius 1.7 mm
-/GP/det/src_halfz  6.0 mm
-/GP/det/src_shiftz 39.49 mm
+/GP/det/src_halfz  9.0 mm
+/GP/det/src_shiftz 42.49 mm
+
 /GP/det/sss_radius 7.0 mm
 /GP/det/sss_halfz 19.25 mm
+
 /GP/det/opn_radius 2.5 mm
-/GP/det/opn_halfz  4.6 mm
+/GP/det/opn_halfz  1.0 mm
+
 /GP/det/pcl_radius 4.9 mm
-/GP/det/pcl_halfz  4.25 mm
+/GP/det/pcl_halfz  0.2 mm
+
 /GP/det/oair_radius 11.0 mm
 /GP/det/oair_halfz  4.0 mm
-/GP/det/sssair_halfz 1.35 mm
+/GP/det/sssair_halfz 0.5 mm
