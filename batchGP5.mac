@@ -1,0 +1,19 @@
+/control/verbose 0
+/tracking/verbose 0
+/run/verbose 0
+/event/verbose 0
+
+/control/execute GP5/C25.in
+
+/run/numberOfThreads 1
+
+/run/initialize
+
+/run/setCut       0.01 mm
+
+/control/execute GP5/source.in
+
+/random/setSeeds 111 111
+
+# NB: number of events! Each event generate 10 photons
+/run/beamOn 10000
