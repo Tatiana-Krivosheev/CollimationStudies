@@ -59,9 +59,17 @@ set(GP3_SCRIPTS
   GP3/source.in
 )
 
+set(GP5_SCRIPTS
+  GP5/C15.in
+  GP5/C25.in
+  GP5/Src.in
+  GP5/source.in
+)
+
 set(ALL_SCRIPTS
   batchGP2.mac
   batchGP3.mac
+  batchGP5.mac
   init_vis.mac
   vis.mac
   )
@@ -83,6 +91,14 @@ foreach(_script ${GP2_SCRIPTS})
 endforeach()
 
 foreach(_script ${GP3_SCRIPTS})
+  configure_file(
+    ${PROJECT_SOURCE_DIR}/${_script}
+    ${PROJECT_BINARY_DIR}/${_script}
+    COPYONLY
+    )
+endforeach()
+
+foreach(_script ${GP5_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
