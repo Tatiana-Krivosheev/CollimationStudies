@@ -8,7 +8,9 @@
                 "path": [],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
-            }
+            },
+            "intelliSenseMode": "gcc-x64"
         }
-    ]
+    ],
+    "version": 4
 }

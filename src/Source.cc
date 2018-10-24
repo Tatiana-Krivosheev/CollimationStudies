@@ -74,7 +74,7 @@ void Source::GeneratePrimaries(G4Event* anEvent)
 
         // energy 50/50 1.17 or 1.33
         auto e = sample_energy();
-        if (z < -_halfz / 3.0 ) { // last 1/3 of the source
+        if (z < 0.0 ) { // last half
             if (G4UniformRand() > 3000./4500.) // reduced activity
                 e = 0.001*MeV;                 // do not kill photon, but set energy to 1keV
         }
