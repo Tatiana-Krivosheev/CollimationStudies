@@ -50,10 +50,12 @@ troika Source::sample_direction()
     return troika{ sin_z * cos(phi), sin_z * sin(phi), cos_z };
 }
 
+
 double Source::sample_energy()
 {
     return (G4UniformRand() < P_lo) ? E_lo : E_hi;
 }
+
 
 void Source::GeneratePrimaries(G4Event* anEvent)
 {
@@ -74,10 +76,6 @@ void Source::GeneratePrimaries(G4Event* anEvent)
 
         // energy 50/50 1.17 or 1.33
         auto e = sample_energy();
-        if (z > _halfz / 3.0 ) { // first third
-            if (G4UniformRand() > 3000./4500.) // reduced activity
-                e = 0.001*MeV;                 // do not kill photon, but set energy to 1keV
-        }
         _particleGun->SetParticleEnergy(e);
 
         // all together in a vertex
