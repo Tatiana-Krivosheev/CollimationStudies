@@ -57,6 +57,7 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     private: double                _scl_holeA;   // upstream opening
     private: double                _scl_holeB;   // downstram opening
     private: double                _scl_halfz;   // sec.collimator half Z
+    private: double                _x_shift;     // global x shift, mm
 
     private: bool                  _checkOverlaps;               // option to activate checking of volumes overlaps
 
@@ -309,6 +310,11 @@ class CollimatorConstruction : public G4VUserDetectorConstruction
     public: void set_scl_halfz(double v)
     {
         _scl_halfz = v;
+    }
+
+    public: void set_x_shift(double v)
+    {
+        _x_shift = v;
     }
 
     public: void set_checkOverlaps(bool v)

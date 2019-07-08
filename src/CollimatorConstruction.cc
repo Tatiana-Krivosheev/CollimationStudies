@@ -67,6 +67,7 @@ CollimatorConstruction::CollimatorConstruction():
     _scl_holeA{-1.0},
     _scl_holeB{-1.0},
     _scl_halfz{-1.0},
+    _x_shift{0.0},
 
     _checkOverlaps{true},
 
@@ -353,7 +354,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
 
     auto secColl = BuildSecondaryCollimator();
     new G4PVPlacement(nullptr,                             // no rotation
-                      G4ThreeVector(0.0, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz), // secondary collimator after primary with air gap in between
+                      G4ThreeVector(_x_shift, 0.0, (_enc_halfz - _src_shiftz) + _air_gap + _coll_halfz), // secondary collimator after primary with air gap in between
                       secColl,         // its logical volume
                       "SCL",           // its name
                       logicEnv,        // its mother volume

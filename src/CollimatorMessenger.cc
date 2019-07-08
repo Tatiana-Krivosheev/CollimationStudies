@@ -40,6 +40,7 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _scl_holeACmd{nullptr},
     _scl_holeBCmd{nullptr},
     _scl_halfzCmd{nullptr},
+    _x_shift{nullptr},
     _checkOverlapsCmd{nullptr}
 {
     _gpDirectory = new G4UIdirectory("/GP/");
@@ -195,6 +196,12 @@ CollimatorMessenger::CollimatorMessenger(CollimatorConstruction* col):
     _scl_holeBCmd->SetRange("scl_holeB>0.0");
     _scl_holeBCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
+    _x_shift = new G4UIcmdWithADoubleAndUnit("/GP/det/x_shift", this);
+    _x_shift->SetGuidance("Set global X shift for secondary collimator elements");
+    _x_shift->SetParameterName("x_shift", false);
+    _x_shift->SetUnitCategory("Length");
+    _x_shift->AvailableForStates(G4State_PreInit, G4State_Idle);
+
     /*
     _stepMaxCmd = new G4UIcmdWithADoubleAndUnit("/GP/det/stepMax",this);
     _stepMaxCmd->SetGuidance("Define a step max");
@@ -239,6 +246,8 @@ CollimatorMessenger::~CollimatorMessenger()
     delete _scl_holeACmd;
     delete _scl_holeBCmd;
     delete _scl_halfzCmd;
+
+    delete _x_shift;
 
     delete _checkOverlapsCmd;
 
@@ -377,6 +386,12 @@ void CollimatorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     if (command == _scl_holeBCmd)
     {
         _collimator->set_scl_holeB(_scl_holeBCmd->GetNewDoubleValue(newValue));
+        return;
+    }
+
+    if (command == _x_shift)
+    {
+        _collimator->set_x_shift(_x_shift->GetNewDoubleValue(newValue));
         return;
     }
 }
