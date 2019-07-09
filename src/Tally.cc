@@ -34,7 +34,7 @@ void Tally::EndOfRunAction(const G4Run* aRun)
     int nof_events = aRun->GetNumberOfEvent();
     nof_events++; nof_events--;
 
-    // std::cout << "Nof events:" << nof_events << std::endl;
+    // std::cout << "Nof events:" << nof_events << '\n';
 
 #ifdef G4VIS_USE
     if (G4VVisManager::GetConcreteInstance())

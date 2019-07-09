@@ -22,6 +22,8 @@ SteppingAction::~SteppingAction()
 
 static std::mutex mtx;
 
+static constexpr char NL = '\n';
+
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
     static const char* PHOTON   = "GGG: ";
@@ -72,7 +74,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
               << std::scientific << std::setw(15) << std::setprecision(4) << pos.z()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.x()
               << std::scientific << std::setw(15) << std::setprecision(4) << dir.y()
-              << std::scientific << std::setw(15) << std::setprecision(4) << dir.z() << std::endl;
+              << std::scientific << std::setw(15) << std::setprecision(4) << dir.z() << NL;
 
     mtx.unlock();
 }

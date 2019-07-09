@@ -29,6 +29,8 @@
 #include "G4DecayPhysics.hh"
 #include "G4RadioactiveDecayPhysics.hh"
 
+static constexpr char NL = '\n';
+
 CollPhysicsList::CollPhysicsList(double cuts):
     G4VModularPhysicsList{},
     _emPhysicsList{nullptr},
@@ -40,7 +42,7 @@ CollPhysicsList::CollPhysicsList(double cuts):
 
     defaultCutValue = cuts;
 
-    std::cout << "Cut set to:" << G4BestUnit(cuts, "Length") << std::endl;
+    std::cout << "Cut set to:" << G4BestUnit(cuts, "Length") << NL;
 
     _cutForGamma     = defaultCutValue;
     _cutForElectron  = defaultCutValue;
@@ -84,7 +86,7 @@ void CollPhysicsList::ConstructProcess()
 void CollPhysicsList::AddPhysicsList(const std::string& name)
 {
     if (verboseLevel>1)
-       std::cout << "PhysicsList::AddPhysicsList: <" << name << ">" << std::endl;
+       std::cout << "PhysicsList::AddPhysicsList: <" << name << ">" << NL;
 
     if (name == _emName)
         return;
@@ -98,8 +100,8 @@ void CollPhysicsList::AddPhysicsList(const std::string& name)
        delete _emPhysicsList;
        _emPhysicsList = new G4EmStandardPhysics_option3();
        G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmStandardPhysics_option3" << G4endl;
-        _emPhysicsList->ConstructProcess();
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmStandardPhysics_option3" << NL;
+       _emPhysicsList->ConstructProcess();
        goto end;
     }
 
@@ -109,7 +111,7 @@ void CollPhysicsList::AddPhysicsList(const std::string& name)
        delete _emPhysicsList;
        _emPhysicsList = new G4EmLowEPPhysics();
        G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLowEPPPhysics" << G4endl;
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLowEPPPhysics" << NL;
         _emPhysicsList->ConstructProcess();
         goto end;
     }
@@ -120,7 +122,7 @@ void CollPhysicsList::AddPhysicsList(const std::string& name)
        delete _emPhysicsList;
        _emPhysicsList = new G4EmLivermorePhysics();
        G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << G4endl;
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << NL;
         _emPhysicsList->ConstructProcess();
         goto end;
     }
@@ -131,14 +133,14 @@ void CollPhysicsList::AddPhysicsList(const std::string& name)
        delete _emPhysicsList;
        _emPhysicsList = new G4EmPenelopePhysics();
        G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << G4endl;
+       G4cout << "THE FOLLOWING ELECTROMAGNETIC PHYSICS LIST HAS BEEN ACTIVATED: G4EmLivermorePhysics" << NL;
         _emPhysicsList->ConstructProcess();
         goto end;
     }
 
    G4cout << "PhysicsList::AddPhysicsList: <" << name << ">"
           << " is not defined"
-          << G4endl;
+          << NL;
 
     end:
     return;
@@ -149,7 +151,7 @@ void CollPhysicsList::SetCuts()
     if (verboseLevel > 0)
     {
         G4cout << "PhysicsList::SetCuts:";
-        G4cout << "CutLength : " << G4BestUnit(defaultCutValue,"Length") << G4endl;
+        G4cout << "CutLength : " << G4BestUnit(defaultCutValue,"Length") << NL;
     }
 
     // set cut values for gamma at first and for e- second and next for e+,

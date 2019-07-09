@@ -29,6 +29,8 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
+static constexpr char NL = '\n';
+
 CollimatorConstruction::CollimatorConstruction():
     G4VUserDetectorConstruction{},
 
@@ -115,7 +117,7 @@ void CollimatorConstruction::DefineMaterials()
     _Nickel = nistManager->FindOrBuildMaterial("G4_Ni");
 
     // Print materials
-    std::cout << *(G4Material::GetMaterialTable()) << std::endl;
+    std::cout << *(G4Material::GetMaterialTable()) << NL;
 }
 
 void CollimatorConstruction::DefineColors()
@@ -301,7 +303,7 @@ G4VPhysicalVolume* CollimatorConstruction::DefineVolumes()
 
     std::cout << "Computed tolerance = "
               << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
-              << " mm" << G4endl;
+              << " mm" << NL;
 
     double maxStep = 0.01*mm;
     _stepLimit = new G4UserLimits(maxStep);

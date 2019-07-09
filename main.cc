@@ -17,6 +17,8 @@
 #include "CollPhysicsList.hh"
 #include "CollActionInitialization.hh"
 
+static constexpr char NL = '\n';
+
 int main(int argc, char* argv[])
 {
     // CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
@@ -72,6 +74,8 @@ int main(int argc, char* argv[])
         G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
     }
+
+    std::cout << "DONE" << NL;
 
     // Job termination
     // Free the store: user actions, physics_list and detector_description are
